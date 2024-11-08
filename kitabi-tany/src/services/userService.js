@@ -41,9 +41,17 @@ export const deleteUser = async (userId) => {
 
 export const loginUser = async (userData) => {
     try {
-        const response = await axios.post(`${API_URL}/login`, userData);
+        console.log("Sending login request:", userData); // Log the request data
+        const response = await axios.post(`${API_URL}/login`, userData, {
+            headers: {
+                'Content-Type': 'application/json',  // Ensure correct content type
+            },
+        });
         return response.data;
     } catch (error) {
-        throw error.response.data;
+        console.error("Login Error:", error); // Log the error
+        throw error.response ? error.response.data : error.message;
     }
 };
+
+
