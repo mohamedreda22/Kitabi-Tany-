@@ -2,6 +2,7 @@ import BookCard from "../../Component/Shared/BookCard"
 import { Link } from "react-router-dom"
 
 const Home = () => {
+    const bookTitle = "The Great Gatsby"
     return (
         <div>
             <h2>Home</h2>
@@ -12,7 +13,7 @@ const Home = () => {
             <Link to="/login">Login</Link>
 
 
-            <BookCard />
+            <BookCard title={bookTitle}/>
         </div>
     )
 }
