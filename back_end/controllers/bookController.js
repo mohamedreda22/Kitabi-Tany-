@@ -1,5 +1,5 @@
 const Book = require('../models/Book');
- 
+
 
 const createBook = async (req, res) => {
     const { title, author, price, condition, category } = req.body;
@@ -9,7 +9,7 @@ const createBook = async (req, res) => {
     }
     let coverPhoto = '';
     if (req.file) {
-        coverPhoto = req.file.path;  
+        coverPhoto = req.file.path;
     } else {
         return res.status(400).json({ message: 'Cover photo is required.' });
     }
@@ -72,7 +72,7 @@ const updateBook = async (req, res) => {
 };
 
 
- 
+
 const deleteBook = async (req, res) => {
     try {
         const deletedBook = await Book.findByIdAndDelete(req.params.id);
@@ -82,6 +82,55 @@ const deleteBook = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+//filter by category or condition or price(min-max) or all
+const filterBooks = async (req, res) => {
+    const { category, condition, minPrice, maxPrice } = req.query;
+
+    try {
+
+        const filter = {};
+
+        if (category) {
+            filter.category = category;
+        }
+        if (condition) {
+            filter.condition = condition;
+        }
+        if (minPrice || maxPrice) {
+            filter.price = {};
+            if (minPrice) {
+                filter.price.$gte = minPrice;
+            }
+            if (maxPrice) {
+                filter.price.$lte = maxPrice;
+            }
+        }
+        const books = await Book.find(filter);
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+//search by title or author
+const searchBooks = async (req, res) => {
+    const { query } = req.query;
+
+    try {
+
+        const searchCriteria = {
+            $or: [
+                { title: { $regex: query, $options: 'i' } },
+                { author: { $regex: query, $options: 'i' } }
+            ]
+        };
+
+        const books = await Book.find(searchCriteria);
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 module.exports = {
     createBook,
@@ -89,4 +138,6 @@ module.exports = {
     getBookById,
     updateBook,
     deleteBook,
+    filterBooks,
+    searchBooks,
 };
