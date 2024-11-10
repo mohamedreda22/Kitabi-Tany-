@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { loginUser } from '../services/userService';
-import "../assets/css/Auth.css"
+import Swal from 'sweetalert2';
+import "../assets/css/Auth.css";
 import { Link } from 'react-router-dom';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,12 +15,28 @@ const Login = () => {
         e.preventDefault();
         try {
             const data = await loginUser(formData);
-            setSuccess(data.message);
-            setError(null);
-            localStorage.setItem('token', data.token); // Store token in localStorage
+            localStorage.setItem('token', data.token);
+
+            // Success alert
+            Swal.fire({
+                icon: 'success',
+                title: 'تم تسجيل الدخول بنجاح',
+                text: data.message,
+                confirmButtonColor: '#4CAF50',
+                timer: 1500,
+                showConfirmButton: false
+            });
         } catch (err) {
-            setError(err.message || 'فشل تسجيل الدخول');
-            setSuccess(null);
+            // Extract error message properly
+            const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء محاولة تسجيل الدخول';
+            
+            // Error alert
+            Swal.fire({
+                icon: 'error',
+                title: 'فشل تسجيل الدخول',
+                text: errorMessage,
+                confirmButtonColor: '#d33',
+            });
         }
     };
 
@@ -45,8 +60,6 @@ const Login = () => {
                 required
             />
             <button type="submit" className="auth-btn">تسجيل الدخول</button>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {success && <p style={{ color: 'green' }}>{success}</p>}
             <Link to="/register" className='routerLink'>إنشاء حساب</Link>
         </form>
     );
