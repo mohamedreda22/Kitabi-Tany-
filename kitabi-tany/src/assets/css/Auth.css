@@ -86,6 +86,28 @@ p.error {
     color: #0f19d2;
     
 }
+.auth-form input {
+    text-align: right; /* Centers the placeholder text to the right */
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+
+.auth-form input::placeholder {
+    text-align: right; /* Ensures the placeholder text is aligned to the right */
+    color: #aaa; /* You can adjust the color if needed */
+}
+
+.auth-form select {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 100%;
+    text-align: right; /* Aligns the select options to the right */
+}
 
 /* Optional: For better responsiveness */
 @media (max-width: 500px) {

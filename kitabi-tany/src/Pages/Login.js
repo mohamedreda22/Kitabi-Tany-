@@ -1,4 +1,3 @@
-// src/components/Login.js
 import React, { useState } from 'react';
 import { loginUser } from '../services/userService';
 import "../assets/css/Auth.css"
@@ -21,36 +20,34 @@ const Login = () => {
             setError(null);
             localStorage.setItem('token', data.token); // Store token in localStorage
         } catch (err) {
-            setError(err.message || 'Login failed');
+            setError(err.message || 'فشل تسجيل الدخول');
             setSuccess(null);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
+            <h2 className="auth-header">تسجيل الدخول</h2>
             <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="البريد الإلكتروني"
                 required
             />
-            <input
+            <input 
                 type="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
+                placeholder="كلمة المرور"
                 required
             />
-            <button type="submit">Login</button>
+            <button type="submit" className="auth-btn">تسجيل الدخول</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}>{success}</p>}
-            <Link to="/register" className='routerLink'>Register</Link>
-
-
+            <Link to="/register" className='routerLink'>إنشاء حساب</Link>
         </form>
     );
 };

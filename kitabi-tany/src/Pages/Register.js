@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { registerUser } from '../services/userService';
 import { Link } from 'react-router-dom';
-
+import axios from 'axios';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -9,20 +9,55 @@ const Register = () => {
         email: '',
         password: '',
         role: 'buyer',
-        profilePicture: '',
+        profilePicture: '', // File reference will be here
     });
+    const [uploadedFile, setUploadedFile] = useState(null); // To store the uploaded file data
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prevState) => ({ ...prevState, [name]: value }));
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({ ...formData, profilePicture: e.target.files[0] });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // File upload logic
+        const file = formData.profilePicture;
+        if (file) {
+            const url = 'http://localhost:3000/uploadFile';
+            const uploadFormData = new FormData();
+            uploadFormData.append('file', file);
+            uploadFormData.append('filename', file.name);
+
+            const config = {
+                headers: {
+                    'content-type': 'multipart/form-data',
+                },
+            };
+
+            try {
+                const response = await axios.post(url, uploadFormData, config);
+                setUploadedFile(response.data.file);
+                alert("تم رفع الملف بنجاح");
+            } catch (error) {
+                setError('فشل رفع الملف');
+            }
+        }
+
+        // Register the user
         try {
-            const data = await registerUser(formData);
-            setSuccess("User registered successfully");
+            const registrationData = {
+                ...formData,
+                profilePicture: uploadedFile ? uploadedFile : formData.profilePicture,
+            };
+            const data = await registerUser(registrationData);
+            setSuccess("تم التسجيل بنجاح");
             setError(null);
         } catch (err) {
             setError(err.message);
@@ -31,14 +66,14 @@ const Register = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Register</h2>
+        <form onSubmit={handleSubmit} className="auth-form">
+            <h2 className="auth-header">إنشاء حساب</h2>
             <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder="Username"
+                placeholder="اسم المستخدم"
                 required
             />
             <input
@@ -46,7 +81,7 @@ const Register = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="البريد الإلكتروني"
                 required
             />
             <input
@@ -54,26 +89,32 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                placeholder="Password"
+                placeholder="كلمة المرور"
                 required
             />
             <select name="role" value={formData.role} onChange={handleChange}>
-                <option value="buyer">Buyer</option>
-                <option value="seller">Seller</option>
+                <option value="buyer">مشتري</option>
+                <option value="seller">بائع</option>
             </select>
             <input
                 type="file"
                 name="profilePicture"
-                value={formData.profilePicture}
-                onChange={handleChange}
-                placeholder="Profile Picture"
+                onChange={handleFileChange}
+                placeholder="صورة الملف الشخصي"
                 required
             />
-            <button type="submit">Register</button>
+            {formData.profilePicture && (
+                <img
+                    src={URL.createObjectURL(formData.profilePicture)}
+                    alt="profile-preview"
+                    style={{ width: '100px', height: '100px', marginTop: '10px',marginLeft: '65px' }}
+                />
+            )}
+            
+            <button type="submit" className="auth-btn">إنشاء حساب</button>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {success && <p style={{ color: 'green' }}>{success}</p>}
-            <Link to="/login" className='routerLink'>Login</Link>
-
+            <Link to="/login" className="routerLink">تسجيل الدخول</Link>
         </form>
     );
 };
