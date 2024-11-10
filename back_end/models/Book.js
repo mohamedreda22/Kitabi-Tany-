@@ -21,7 +21,7 @@ const bookSchema = new mongoose.Schema({
     coverPhoto: String,
     category: {
         type: String,
-        enum: ['fiction', 'science', 'history', 'biography', 'romance', 'mystery', 'fantasy', 'children', 'non-fiction', 'adventure'],
+        enum: ['fiction', 'science', 'history', 'biography', 'romance', 'mystery', 'fantasy', 'children', 'non-fiction', 'adventure', 'psychology'],
         required: true
     },
     seller: {
@@ -32,5 +32,5 @@ const bookSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 });
 
-const Book = mongoose.model('Book', bookSchema,'Book');
+const Book = mongoose.model('Book', bookSchema, 'Book');
 module.exports = Book;

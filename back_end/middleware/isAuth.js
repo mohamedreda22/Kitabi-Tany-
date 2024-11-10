@@ -19,12 +19,12 @@ const isAuth = async (req, res, next) => {
         const payload = await jwt.verify(token, secretKey, { algorithms: ['HS256'] });
 
         // Attach the decoded user ID to the request object
-        req.userId = payload.userId;
+        req.userId = payload.id;
 
         next();
     } catch (error) {
         console.error(error);
-        return res.status(401).json({ message: 'Authentication failed' });
+        return res.status(401).json(error);
     }
 };
 

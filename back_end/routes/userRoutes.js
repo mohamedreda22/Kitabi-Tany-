@@ -87,11 +87,11 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-
+        const secretKey = process.env.SECRET_KEY;
         // If passwords match, create a JWT token
         const token = jwt.sign(
             { id: user._id, username: user.username },
-            'your_secret_key', // Use a secret key for JWT in production
+            secretKey, // Use a secret key for JWT in production
             { expiresIn: '1h' }
         );
 
