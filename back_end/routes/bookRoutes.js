@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const bookController = require('../controllers/bookController');
 const isAuth = require('../middleware/isAuth');
-const uploadBook = require('../middleware/Upload');
+const upload= require('../middleware/Upload');
 //Protected put in headers token from login --> headers: {Authorization: `Bearer ${token}`}
-router.post('/', isAuth, uploadBook.single('coverPhoto'), bookController.createBook);
+router.post('/', isAuth, upload.uploadBook.single('coverPhoto'), bookController.createBook);
 router.put('/:id', isAuth, bookController.updateBook);
 router.delete('/:id', isAuth, bookController.deleteBook);
 
