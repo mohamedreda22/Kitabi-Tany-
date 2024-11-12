@@ -1,8 +1,19 @@
 const multer = require('multer');
 const path = require('path');
+ 
 const storageBook = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../back_end/cover_books');
+        cb(null, '../back_end/Uploads/cover_books');  
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+
+ 
+const storageProfile = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, '../back_end/Uploads/profile_pictures'); 
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
@@ -10,4 +21,6 @@ const storageBook = multer.diskStorage({
 });
 
 const uploadBook = multer({ storage: storageBook });
-module.exports = uploadBook;
+const uploadProfile = multer({ storage: storageProfile });
+
+module.exports = { uploadBook, uploadProfile };

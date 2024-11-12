@@ -9,7 +9,7 @@ const createBook = async (req, res) => {
     }
     let coverPhoto = '';
     if (req.file) {
-        coverPhoto = req.file.path;
+        coverPhoto = req.file.filename;
     } else {
         return res.status(400).json({ message: 'Cover photo is required.' });
     }

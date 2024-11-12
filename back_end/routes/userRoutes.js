@@ -4,9 +4,10 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { hashPassword } = require('../middleware/hashing');
+const { uploadProfile } = require('../middleware/Upload');
 
 // Create a new user (register)
-router.post('/register', async (req, res) => {
+router.post('/register', uploadProfile.single('profilePicture'), async (req, res) => {
     const { username, email, password, role } = req.body;
 
     try {
@@ -23,6 +24,7 @@ router.post('/register', async (req, res) => {
             email,
             password: hashedPassword, // Save hashed password
             role,
+            profilePicture: req.file ? req.file.filename : null,
         });
 
         await newUser.save();

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
@@ -14,6 +15,8 @@ app.use(
     credentials: true
   })
 );
+app.use('/cover_books', express.static(path.join(__dirname, 'Uploads/cover_books')));
+app.use('/profile_pictures', express.static(path.join(__dirname, 'Uploads/Profile_pictures')));
 
 const DATABASE = process.env.DATABASE;
 mongoose.connect(DATABASE)

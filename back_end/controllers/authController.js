@@ -41,25 +41,25 @@ exports.forgetPassword = async (req, res) => {
     const user = await User.findOne({ email }).exec();
 
     if (!user) {
-        return res.status(404).json({ message: "عذرًا، لم يتم العثور على حساب بهذا البريد الإلكتروني." });
+        return res.status(404).json({ message: "Sorry, no account was found with this email address." });
     }
 
     const token = await jwt.sign({ userId: user._id }, process.env.PASSWORD_RESET_SECRET_KEY, { expiresIn: "5m" });
 
-
     const emailOptions = {
         mailTo: user.email,
-        subject: "إعادة تعيين كلمة المرور",
+        subject: "أعادة تعين كبمة السر",
         emailBody: emailBody(token, user.username)
     };
 
     try {
         await sendEmail(emailOptions);
-        res.status(200).json({ message: "تم إرسال رسالة بريد إلكتروني تحتوي على تعليمات إعادة تعيين كلمة المرور. يرجى التحقق من بريدك الإلكتروني." });
+        res.status(200).json({ message: "An email with password reset instructions has been sent. Please check your email." });
     } catch (error) {
-        res.status(500).json({ message: "حدث خطأ أثناء إرسال البريد الإلكتروني. يرجى المحاولة مرة أخرى لاحقًا." });
+        res.status(500).json({ message: "An error occurred while sending the email. Please try again later." });
     }
 };
+
 
 exports.resetPassword = async (req, res) => {
     const { password, passwordConfirmation, token } = req.body;
