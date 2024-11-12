@@ -48,7 +48,7 @@ exports.forgetPassword = async (req, res) => {
 
     const emailOptions = {
         mailTo: user.email,
-        subject: "أعادة تعين كبمة السر",
+        subject: "أعادة تعين كلمة السر",
         emailBody: emailBody(token, user.username)
     };
 
