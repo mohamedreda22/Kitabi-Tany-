@@ -17,13 +17,14 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['buyer', 'seller'],
     },
+    password_updatedAt: Date,
     profilePicture: String,
     ratings: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         rating: { type: Number, min: 1, max: 5 },
     }],
-    createdAt: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now }
 });
 
-const User = mongoose.model('User', userSchema,'User');
+const User = mongoose.model('User', userSchema, 'User');
 module.exports = User;

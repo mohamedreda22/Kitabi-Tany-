@@ -25,6 +25,11 @@ mongoose.connect(DATABASE)
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-app.use('/api/books',bookRoutes)
+app.use('/api/books', bookRoutes)
+
+app.use("*", (req, res) => {
+  res.status(404).json({ message: `can not found route for  this ${req.originalUrl}` })
+})
+ 
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
