@@ -1,22 +1,36 @@
 const User = require('../models/User');
 const authService = require('../services/authService')
 const hashing = require('../middleware/hashing')
+const { hashPassword } = require('../middleware/hashing');
 const sendEmail = require("../util/sendEmail")
 const emailBody = require("../util/emailBody")
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
+    const { username, email, password, role } = req.body;
+
     try {
-        const { username, email, password, role } = req.body;
-        const hashedPassword = await hashing.hashPassword(password);
-        const newUser = new User({ username, email, password: hashedPassword, role });
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
+
+        // Hash the password before saving it
+        const hashedPassword = await hashPassword(password);
+
+        const newUser = new User({
+            username,
+            email,
+            password: hashedPassword, // Save hashed password
+            role,
+            profilePicture: req.file ? req.file.filename : null,
+        });
 
         await newUser.save();
-        const token = await authService.generateToken({ userId: newUser._id });
-        const refreshToken = await authService.generateRefreshToken({ userId: newUser._id });
-        res.status(201).json({ token, refreshToken });
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error("Registration Error:", error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
