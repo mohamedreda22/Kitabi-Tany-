@@ -8,6 +8,8 @@ const userRoutes = require('./routes/userRoutes');
 const bookRoutes = require('./routes/bookRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes= require('./routes/orderRoutes')
+const notification=require('./routes/nofificationsRoutes')
+const reviewRoutes = require('./routes/reviewRoutes')
 const app = express();
 app.use(express.json());
 app.use(
@@ -33,6 +35,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes)
 app.use('/api/cart', cartRoutes);
 app.use('/api/order', orderRoutes);
+app.use('/api/notify',notification);
+app.use('/api/review',reviewRoutes);
 app.use("*", (req, res) => {
   res.status(404).json({ message: `can not found route for  this ${req.originalUrl}` })
 })
