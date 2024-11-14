@@ -27,8 +27,14 @@ const placeOrder = async (req, res) => {
 
         await order.save();
 
+        // Clear the cart after placing the order
         cart.items = [];
         await cart.save();
+
+        // Update each book's `sold` status to true
+        for (let item of order.books) {
+            await Book.findByIdAndUpdate(item.book, { sold: true });
+        }
 
         const buyer = await User.findById(req.userId);
         const message = `New order from ${buyer.username}`;
@@ -42,6 +48,7 @@ const placeOrder = async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 };
+
 
 
 const getBuyerOrders = async (req, res) => {

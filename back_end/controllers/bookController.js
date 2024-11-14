@@ -30,12 +30,14 @@ const createBook = async (req, res) => {
 
 const getAllBooks = async (req, res) => {
     try {
-        const books = await Book.find();
+        // Retrieve only books that are not sold
+        const books = await Book.find({ sold: false });
         res.status(200).json(books);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 const getBookById = async (req, res) => {
