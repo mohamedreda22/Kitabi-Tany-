@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
         enum: ['buyer', 'seller'],
     },
     password_updatedAt: Date,
-    profilePicture: String,
+    profilePicture: { type: String, default: "" },
     ratings: [{
         user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         rating: { type: Number, min: 1, max: 5 },

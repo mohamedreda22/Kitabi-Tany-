@@ -10,6 +10,7 @@ const cartRoutes = require('./routes/cartRoutes');
 const orderRoutes= require('./routes/orderRoutes')
 const notification=require('./routes/nofificationsRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
+const uploadRoutes = require('./routes/uploadRoutes'); 
 const app = express();
 app.use(express.json());
 app.use(
@@ -21,6 +22,7 @@ app.use(
 );
 app.use('/cover_books', express.static(path.join(__dirname, 'Uploads/cover_books')));
 app.use('/profile_pictures', express.static(path.join(__dirname, 'Uploads/Profile_pictures')));
+app.use('/upload', uploadRoutes);
 
 const DATABASE = process.env.DATABASE;
 mongoose.connect(DATABASE)

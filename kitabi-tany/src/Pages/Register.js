@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { registerUser } from '../services/userService';
 import { Link } from 'react-router-dom';
-//import axios from 'axios';
-import Swal from 'sweetalert2'; // Import SweetAlert2
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import '../assets/css/Auth.css';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -10,39 +11,37 @@ const Register = () => {
         email: '',
         password: '',
         role: 'buyer',
-        //profilePicture: '', 
+        profilePicture: '', 
     });
-    //const [uploadedFile, setUploadedFile] = useState(null); 
+    // const [uploadedFile, setUploadedFile] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({ ...prevState, [name]: value }));
     };
 
-/*     const handleFileChange = (e) => {
+    const handleFileChange = (e) => {
         setFormData({ ...formData, profilePicture: e.target.files[0] });
-    }; */
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
     
-        // File upload logic
-/*         const file = formData.profilePicture;
+        const file = formData.profilePicture;
+        let uploadedFileName = '';
+    
         if (file) {
-            const url = 'http://localhost:3000/uploadFile';
             const uploadFormData = new FormData();
             uploadFormData.append('file', file);
-            uploadFormData.append('filename', file.name);
-    
-            const config = {
-                headers: {
-                    'content-type': 'multipart/form-data',
-                },
-            };
     
             try {
-                const response = await axios.post(url, uploadFormData, config);
-                setUploadedFile(response.data.file);
+                const response = await axios.post(
+                    'http://localhost:5000/upload/profile_pictures',
+                    uploadFormData,
+                    { headers: { 'Content-Type': 'multipart/form-data' } }
+                );
+                uploadedFileName = response.data.file;
+    
                 Swal.fire({
                     icon: 'success',
                     title: 'تم رفع الملف بنجاح',
@@ -57,17 +56,18 @@ const Register = () => {
                     text: errorMessage,
                     confirmButtonColor: '#d33',
                 });
+                return; // stop further execution if upload fails
             }
-            
-        } */
+        }
     
-        // Register the user
+        // Ensure that uploadedFileName is passed as profilePicture in registrationData
         try {
             const registrationData = {
                 ...formData,
-               // profilePicture: uploadedFile ? uploadedFile : formData.profilePicture,
+                profilePicture: uploadedFileName,  // Set uploaded file name to profilePicture
             };
             const data = await registerUser(registrationData);
+            console.log(registrationData);
             Swal.fire({
                 icon: 'success',
                 title: 'تم التسجيل بنجاح',
@@ -85,7 +85,6 @@ const Register = () => {
                 confirmButtonColor: '#d33',
             });
         }
-        
     };
     
 
@@ -120,7 +119,7 @@ const Register = () => {
                 <option value="buyer">مشتري</option>
                 <option value="seller">بائع</option>
             </select>
-           {/*  <input
+            <input
                 type="file"
                 name="profilePicture"
                 onChange={handleFileChange}
@@ -133,7 +132,7 @@ const Register = () => {
                     alt="profile-preview"
                     style={{ width: '100px', height: '100px', marginTop: '10px', marginLeft: '80px' }}
                 />
-            )} */}
+            )}
             
             <button type="submit" className="auth-btn">إنشاء حساب</button>
             <Link to="/login" className="routerLink">تسجيل الدخول</Link>
