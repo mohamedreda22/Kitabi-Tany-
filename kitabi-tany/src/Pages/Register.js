@@ -13,7 +13,6 @@ const Register = () => {
         role: 'buyer',
         profilePicture: '', 
     });
-    // const [uploadedFile, setUploadedFile] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +21,9 @@ const Register = () => {
 
     const handleFileChange = (e) => {
         setFormData({ ...formData, profilePicture: e.target.files[0] });
+        console.log("Selected file:", e.target.files[0]);  
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,8 +33,7 @@ const Register = () => {
     
         if (file) {
             const uploadFormData = new FormData();
-            uploadFormData.append('file', file);
-    
+            uploadFormData.append('profilePicture', file);    
             try {
                 const response = await axios.post(
                     'http://localhost:5000/upload/profile_pictures',
@@ -126,13 +126,10 @@ const Register = () => {
                 placeholder="صورة الملف الشخصي"
                 required
             />
-            {formData.profilePicture && (
-                <img
-                    src={URL.createObjectURL(formData.profilePicture)}
-                    alt="profile-preview"
-                    style={{ width: '100px', height: '100px', marginTop: '10px', marginLeft: '80px' }}
-                />
-            )}
+            {formData.profilePicture ? (
+                <img src={URL.createObjectURL(formData.profilePicture)} alt="profile-preview" style={{ width: '100px', height: '100px', marginTop: '10px', marginLeft: '80px' }} />
+            ) : null}
+
             
             <button type="submit" className="auth-btn">إنشاء حساب</button>
             <Link to="/login" className="routerLink">تسجيل الدخول</Link>
