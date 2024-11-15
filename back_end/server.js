@@ -23,6 +23,7 @@ app.use(
 app.use('/cover_books', express.static(path.join(__dirname, 'Uploads/cover_books')));
 app.use('/profile_pictures', express.static(path.join(__dirname, 'Uploads/Profile_pictures')));
 app.use('/upload', uploadRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const DATABASE = process.env.DATABASE;
 mongoose.connect(DATABASE)

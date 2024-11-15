@@ -19,9 +19,17 @@ const axiosInstance = axios.create({
 }; */
 // Register User API
 export const registerUser = async (userData) => {
-    const response = await axios.post('http://localhost:5000/api/register', userData);
-    return response.data;
-};
+    // const response = await axios.post('http://localhost:5000/api/register', userData);
+    try {
+        const response = await axiosInstance.post('/register', userData);
+        return response.data;
+    }
+    catch (error) {
+        handleError(error);
+    }
+}    
+
+
 
 
 export const getUserById = async (userId) => {

@@ -23,7 +23,8 @@ exports.register = async (req, res) => {
             email,
             password: hashedPassword, // Save hashed password
             role,
-            profilePicture: req.file ? req.file.filename : null,
+            // profilePicture: req.file ? req.file.filename : null,
+            profilePicture,
         });
 
         await newUser.save();

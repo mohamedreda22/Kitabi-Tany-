@@ -91,7 +91,8 @@ router.post('/register', uploadProfile, async (req, res) => {
         const hashedPassword = await hashPassword(password);
 
         // If no profile picture, set a default
-        const profilePicFilename = req.file ? req.file.filename : "default-test-image.jpg";
+        const profilePicFilename = req.file ? req.file.filename : 'default-test-image.jpg';
+        console.log('Profile picture filename:', profilePicFilename); 
 
         // Create a new user
         const newUser = new User({

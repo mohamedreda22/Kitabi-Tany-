@@ -23,17 +23,17 @@ const Register = () => {
         setFormData({ ...formData, profilePicture: e.target.files[0] });
         console.log("Selected file:", e.target.files[0]);  
     };
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         const file = formData.profilePicture;
         let uploadedFileName = '';
-    
+
         if (file) {
             const uploadFormData = new FormData();
-            uploadFormData.append('profilePicture', file);    
+            uploadFormData.append('profilePicture', file);
+
             try {
                 const response = await axios.post(
                     'http://localhost:5000/upload/profile_pictures',
@@ -41,7 +41,8 @@ const Register = () => {
                     { headers: { 'Content-Type': 'multipart/form-data' } }
                 );
                 uploadedFileName = response.data.file;
-    
+                console.log("Uploaded file name:", uploadedFileName);
+
                 Swal.fire({
                     icon: 'success',
                     title: 'تم رفع الملف بنجاح',
@@ -59,12 +60,12 @@ const Register = () => {
                 return; // stop further execution if upload fails
             }
         }
-    
+
         // Ensure that uploadedFileName is passed as profilePicture in registrationData
         try {
             const registrationData = {
                 ...formData,
-                profilePicture: uploadedFileName,  // Set uploaded file name to profilePicture
+                profilePicture: uploadedFileName || formData.profilePicture
             };
             const data = await registerUser(registrationData);
             console.log(registrationData);
@@ -86,7 +87,6 @@ const Register = () => {
             });
         }
     };
-    
 
     return (
         <form onSubmit={handleSubmit} className="auth-form">
@@ -126,11 +126,14 @@ const Register = () => {
                 placeholder="صورة الملف الشخصي"
                 required
             />
-            {formData.profilePicture ? (
-                <img src={URL.createObjectURL(formData.profilePicture)} alt="profile-preview" style={{ width: '100px', height: '100px', marginTop: '10px', marginLeft: '80px' }} />
+            {formData.profilePicture && formData.profilePicture instanceof File ? (
+                <img 
+                    src={URL.createObjectURL(formData.profilePicture)} 
+                    alt="profile-preview" 
+                    style={{ width: '100px', height: '100px', marginTop: '10px', marginLeft: '80px' }} 
+                />
             ) : null}
 
-            
             <button type="submit" className="auth-btn">إنشاء حساب</button>
             <Link to="/login" className="routerLink">تسجيل الدخول</Link>
         </form>

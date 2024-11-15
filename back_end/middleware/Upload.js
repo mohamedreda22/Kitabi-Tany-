@@ -14,9 +14,9 @@ const storageBook = multer.diskStorage({
 // Storage configuration for profile pictures
 const storageProfile = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log("Storing file to:", '../back_end/Uploads/profile_pictures');
+        console.log("Storing file to:", '../back_end/Uploads/Profile_pictures');
         // cb(null, '../back_end/Uploads/profile_pictures'); 
-        cb(null, path.join(__dirname, '../Uploads/profile_pictures'));
+        cb(null, path.join(__dirname, '../Uploads/Profile_pictures'));
     },
     filename: (req, file, cb) => {
         console.log("Original File Name:", file.originalname);
