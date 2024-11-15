@@ -3,6 +3,7 @@ import { loginUser } from '../services/userService';
 import Swal from 'sweetalert2';
 import "../assets/css/Auth.css";
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie'; 
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -15,8 +16,9 @@ const Login = () => {
         e.preventDefault();
         try {
             const data = await loginUser(formData);
-            localStorage.setItem('token', data.token);
-
+            Cookies.set('token', data.token, { expires: 7 });
+            Cookies.set('userId', data.userId, { expires: 7 });
+            console.log("what us inside the data??", data);
             // Success alert
             Swal.fire({
                 icon: 'success',
@@ -26,7 +28,7 @@ const Login = () => {
                 timer: 1500,
                 showConfirmButton: false
             });
-        } catch (err) {
+         } catch (err) {
             // Extract error message properly
             const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء محاولة تسجيل الدخول';
             
