@@ -19,6 +19,7 @@ const Login = () => {
             Cookies.set('token', data.token, { expires: 7 });
             Cookies.set('userId', data.userId, { expires: 7 });
             console.log("what us inside the data??", data);
+            window.location.href = '/profile'; 
             // Success alert
             Swal.fire({
                 icon: 'success',

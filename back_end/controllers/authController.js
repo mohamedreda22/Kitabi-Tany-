@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
         });
 
         await newUser.save();
-        res.status(201).json({ message: 'تم التسجيل بنجاح', user: savedUser });
+        res.status(201).json({ message: 'تم التسجيل بنجاح', user: newUser });
     } catch (error) {
         console.error("Registration Error:", error);
         res.status(500).json({ message: 'فشل في التسجيل' });

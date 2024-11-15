@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 
+
 // Storage configuration for book covers
 const storageBook = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -12,7 +13,7 @@ const storageBook = multer.diskStorage({
 });
 
 // Storage configuration for profile pictures
-const storageProfile = multer.diskStorage({
+/* const storageProfile = multer.diskStorage({
     destination: (req, file, cb) => {
         console.log("Storing file to:", '../back_end/Uploads/Profile_pictures');
         // cb(null, '../back_end/Uploads/profile_pictures'); 
@@ -24,7 +25,7 @@ const storageProfile = multer.diskStorage({
         console.log("Original File Name:", file.originalname);
         cb(null, Date.now() + path.extname(file.originalname));
     }
-});
+}); */
 
 
 // File filter to allow only image files
@@ -52,5 +53,37 @@ const uploadBook = multer({
     fileFilter,
     limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5 MB
 }); */
-const uploadProfile = multer({ storage: storageProfile}).single('profilePicture');
+// const uploadProfile = multer({ storage: storageProfile}).single('profilePicture');
+const uploadProfile = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            console.log('Setting file destination');
+            cb(null, 'Uploads/Profile_pictures');
+        },
+        filename: (req, file, cb) => {
+            console.log('Setting file name');
+            cb(null, Date.now() + '-' + file.originalname);
+        },
+    }),
+}).single('profilePicture');
+
+
+/* const uploadProfile = multer({
+    storage: multer.diskStorage({
+        destination: (req, file, cb) => {
+            cb(null, 'Uploads/Profile_pictures');
+        },
+        filename: (req, file, cb) => {
+            cb(null, Date.now() + '-' + file.originalname);
+        },
+    }),
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+            cb(null, true);
+        } else {
+            cb(new Error('Only .jpeg and .png formats are allowed'));
+        }
+    },
+}).single('profilePicture'); */
+
 module.exports = { uploadBook, uploadProfile };

@@ -18,7 +18,24 @@ const axiosInstance = axios.create({
     }
 }; */
 // Register User API
-export const registerUser = async (userData) => {
+export const registerUser = async (registrationData) => {
+    const formData = new FormData();
+    for (const key in registrationData) {
+        formData.append(key, registrationData[key]);
+    }
+    
+    const response = await axios.post(
+        'http://localhost:5000/api/users/register',
+        formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        }
+    );
+    return response.data;
+};
+/* export const registerUser = async (userData) => {
     // const response = await axios.post('http://localhost:5000/api/register', userData);
     try {
         const response = await axiosInstance.post('/register', userData);
@@ -27,7 +44,7 @@ export const registerUser = async (userData) => {
     catch (error) {
         handleError(error);
     }
-}    
+}     */
 
 
 

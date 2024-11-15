@@ -24,8 +24,8 @@ const Profile = () => {
         if (!userId || !token) {
             Swal.fire({
                 icon: 'warning',
-                title: 'Unauthorized',
-                text: 'Please log in to access your profile.',
+                title: 'غير مصرح لك بالدخول',
+                text: 'الرجاء تسجيل الدخول للوصول الى هذه الصفحة',
             }).then(() => {
                 console.error('Unauthorized access to profile');
             });
@@ -126,8 +126,8 @@ const Profile = () => {
             console.error('Error updating profile:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Error',
-                text: 'Failed to update profile.',
+                title: 'خطأ',
+                text: 'خطا في تحديث البيانات الرجاء المحاولة مرة اخرى',
             });
         }
     };
@@ -136,11 +136,11 @@ const Profile = () => {
     const handleDeleteAccount = async () => {
         const confirmation = await Swal.fire({
             icon: 'warning',
-            title: 'Are you sure?',
-            text: 'This action will delete your account permanently.',
+            title: 'هل انت متأكد؟',
+            text: 'ذلك سيؤدي الى حذف حسابك نهائياً',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel',
+            confirmButtonText: 'نعم، احذف الحساب',
+            cancelButtonText: 'الغاء',
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
         });
@@ -154,15 +154,15 @@ const Profile = () => {
                 Cookies.remove('token');
                 Swal.fire({
                     icon: 'success',
-                    title: 'Deleted',
-                    text: 'Your account has been deleted.',
+                    title: 'حذف الحساب',
+                    text: 'تم حذف الحساب بنجاح',
                 });
             } catch (error) {
                 console.error('Error deleting account:', error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to delete account.',
+                    title: 'خطأ',
+                    text: 'حدث خطأ أثناء حذف الحساب، الرجاء المحاولة مرة اخرى',
                 });
             }
         }
@@ -171,6 +171,13 @@ const Profile = () => {
     // Handle theme toggle
     const handleThemeToggle = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    };
+
+    // Handle logout
+    const handleLogOut = () => {
+        Cookies.remove('userId');
+        Cookies.remove('token');
+        window.location.href = '/';
     };
 
     return (
@@ -190,7 +197,7 @@ const Profile = () => {
 
                 <h3>اعدادات الملف الشخصي</h3>
                 <button onClick={handleDeleteAccount} >حذف الحساب</button><br/>
-                <button onClick={handleDeleteAccount} className='logout-btn'>تسجيل الخروج</button>
+                <button onClick={handleLogOut} className='logout-btn'>تسجيل الخروج</button>
                 <div className="toggle-switch-container">
                     <label>Toggle Theme</label>
                     <div className={`toggle-switch ${theme}`}>

@@ -9,6 +9,7 @@ const { uploadProfile } = require('../middleware/Upload');
 
 // Register route
 router.post('/register', uploadProfile, async (req, res) => {
+    console.log('Request file:', req.file); // Should not be undefined
     const { username, email, password, role } = req.body;
 
     // Validate required fields
@@ -18,8 +19,11 @@ router.post('/register', uploadProfile, async (req, res) => {
 
     try {
         // Check if the file was successfully uploaded
+        console.log("Request body:", req.body);
+        console.log("Request file:", req.file);
+
         if (req.file) {
-            console.log('Uploaded file:', req.file);  // This should log the file details
+            console.log('Uploaded file:', req.file); 
         } else {
             console.log('No file uploaded');
         }
@@ -50,11 +54,11 @@ router.post('/register', uploadProfile, async (req, res) => {
         console.log("New user data before saving:", newUser);
 
         // Save user to database
-        await newUser.save();
-        console.log("New user data after saving:", newUser._id);
+        const savedUser = await newUser.save();
+        console.log("New user data after saving:", savedUser._id.toString());
 
         // Respond with success
-        res.status(201).json({ message: 'User registered successfully', userId: savedUser._id });
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         console.error("Registration Error:", error);
         res.status(500).json({ message: 'Server error during registration' });
@@ -116,19 +120,6 @@ router.put('/:id', uploadProfile, async (req, res) => {
         res.status(500).json({ message: 'Failed to update profile', error: error.message });
     }
 });
-
-/* router.put('/:id', async (req, res) => {
-    try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updatedUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        res.json(updatedUser);
-    } catch (error) {
-        console.error("Update User Error:", error);
-        res.status(400).json({ error: error.message });
-    }
-}); */
 
 // Delete user
 router.delete('/:id', async (req, res) => {

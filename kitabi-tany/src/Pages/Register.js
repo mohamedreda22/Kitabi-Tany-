@@ -77,6 +77,7 @@ const Register = () => {
                 timer: 1500,
                 showConfirmButton: false
             });
+            window.location.href = '/login';
         } catch (err) {
             const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء التسجيل';
             Swal.fire({
@@ -86,6 +87,7 @@ const Register = () => {
                 confirmButtonColor: '#d33',
             });
         }
+        console.log("Form Data:", formData);
     };
 
     return (
@@ -122,6 +124,7 @@ const Register = () => {
             <input
                 type="file"
                 name="profilePicture"
+                accept="image/*"
                 onChange={handleFileChange}
                 placeholder="صورة الملف الشخصي"
                 required
