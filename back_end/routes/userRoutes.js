@@ -161,10 +161,10 @@ router.post('/login', async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
-        console.log('Logged in User ID:', user._id.toString());
+        // console.log('Logged in User ID:', user._id.toString());
         // console.log('Fetched User:', user);
-        console.log('User ID:', user._id);
-        console.log('User ID string:', user._id.toString());
+        // console.log('User ID:', user._id);
+        // console.log('User ID string:', user._id.toString());
         // Generate JWT token
         const token = jwt.sign(
             { id: user._id, username: user.username  },
@@ -173,7 +173,7 @@ router.post('/login', async (req, res) => {
         );
         const userId = user._id.toString();
         // Set cookies
-        console.log("Setting cookie for userId:", userId);
+        // console.log("Setting cookie for userId:", userId);
         // cookies.set('userId', userId, { expires: 7 });
         res.cookie('userId', userId, { 
             httpOnly: true, 
@@ -182,7 +182,7 @@ router.post('/login', async (req, res) => {
             sameSite: 'None', 
             maxAge: 3600000 // 1 hour
         });
-        console.log("Setting cookie for userId:", userId);
+        // console.log("Setting cookie for userId:", userId);
 
          res.cookie('token', token, { 
             httpOnly: true, 

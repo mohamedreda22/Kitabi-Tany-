@@ -5,27 +5,16 @@ const path = require('path');
 // Storage configuration for book covers
 const storageBook = multer.diskStorage({
     destination: (req, file, cb) => {
+        // Destination folder for the uploaded book cover images
         cb(null, path.join(__dirname, '../Uploads/cover_books'));
     },
     filename: (req, file, cb) => {
+        // Set the file name to be the current timestamp + the original file extension
         cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
-// Storage configuration for profile pictures
-/* const storageProfile = multer.diskStorage({
-    destination: (req, file, cb) => {
-        console.log("Storing file to:", '../back_end/Uploads/Profile_pictures');
-        // cb(null, '../back_end/Uploads/profile_pictures'); 
-        // cb(null, path.join(__dirname, '../Uploads/Profile_pictures'));
-                cb(null, path.join(__dirname, '..', 'Uploads', 'Profile_pictures'));
 
-    },
-    filename: (req, file, cb) => {
-        console.log("Original File Name:", file.originalname);
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-}); */
 
 
 // File filter to allow only image files

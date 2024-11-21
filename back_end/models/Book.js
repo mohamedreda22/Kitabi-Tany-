@@ -16,13 +16,25 @@ const bookSchema = new mongoose.Schema({
     },
     condition: {
         type: String,
-        enum: ['new', 'like new', 'good', 'acceptable'],
+        enum: ['جديد', 'مثل الجديد', 'جيد', 'مقبول'],
         required: true
     },
     coverPhoto: String,
     category: {
         type: String,
-        enum: ['fiction', 'science', 'history', 'biography', 'romance', 'mystery', 'fantasy', 'children', 'non-fiction', 'adventure', 'psychology'],
+        enum: [
+            "روايات", 
+            "علمية", 
+            "تاريخية", 
+            "سيرة ذاتية", 
+            "رومانسية", 
+            "غموض", 
+            "خيال", 
+            "أطفال", 
+            "غير روائية", 
+            "مغامرات", 
+            "علم النفس"
+          ],
         required: true
     },
     seller: {

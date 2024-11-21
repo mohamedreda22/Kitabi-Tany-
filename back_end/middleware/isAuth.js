@@ -4,7 +4,7 @@ const isAuth = async (req, res, next) => {
     // Check if the authorization header is present
     const authHeader = req.headers['authorization'];
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
         return res.status(401).json({ message: 'You can\'t access this feature without logging in!' });
     }
 
@@ -23,8 +23,16 @@ const isAuth = async (req, res, next) => {
 
         next();
     } catch (error) {
-        console.error(error);
-        return res.status(401).json(error);
+        // Handling different error cases separately
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ message: 'Token expired, please log in again.' });
+        }
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Invalid token, please log in again.' });
+        }
+
+        console.error('Authentication Error:', error.message);
+        return res.status(401).json({ message: 'Authentication failed. Please try again.' });
     }
 };
 
