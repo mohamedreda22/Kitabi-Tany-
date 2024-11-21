@@ -5,10 +5,12 @@ import AddBook from "../Pages/AddBook.js";
 import PrivateRoute from "./PrivateRoute.js";
 
 
+
 const Home = lazy(() => import("../Pages/Home/Home"));
 const Login = lazy(() => import("../Pages/Login.js"));
 const Register = lazy(() => import("../Pages/Register.js"));
 const Profile = lazy(() => import("../Pages/Profile.js"));
+const BookDetail = lazy(() => import("../Pages/BookDetail")); // Lazy load the BookDetail component
 
 const Router = () => {
     return (
@@ -21,6 +23,7 @@ const Router = () => {
                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                     <Route path="/add-book" element={<PrivateRoute><AddBook /></PrivateRoute>} />
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/book/:bookId" element={<BookDetail />} />
                 </Routes>
             </Suspense>
         </AppRouter>

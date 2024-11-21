@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./HomePage.css";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
@@ -30,7 +31,7 @@ const HomePage = () => {
 
       <section className="section">
         <h2>أحدث الكتب المضافة</h2>
-        <button>
+        <button className="btns">
           <a href="/add-book">اضافة كتاب جديد</a>
         </button>
       </section>
@@ -45,7 +46,7 @@ const HomePage = () => {
         <div className="cards">
           {filteredBooks.map((book) => (
             <div key={book._id} className="card">
-              <div className="avatar">
+              <Link to={`/book/${book._id}`}> 
                 <img
                   src={
                     book.coverPhoto
@@ -53,9 +54,10 @@ const HomePage = () => {
                       : "/My LOGO.jpg" // Fallback image if coverPhoto is missing
                   }
                   alt="Book cover"
+                  className="cover"
                 />
-              </div>
               <h3>{book.title}</h3>
+              </Link>
               <p>المؤلف: {book.author}</p>
               <p>السعر: {book.price} جنيه</p>
               <p>الحالة: {book.condition}</p>

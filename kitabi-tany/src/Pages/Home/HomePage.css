@@ -45,12 +45,17 @@ header p {
 }
 
 /* Cards Container */
+/* Cards Container */
 .cards {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
+  justify-content: center; 
+  align-items: center; 
+  margin: 0 auto; 
+  width: 100%;
 }
+
 
 /* Book Card */
 .card {
@@ -68,10 +73,16 @@ header p {
   transform: translateY(-5px);
 }
 
-.card img {
-  max-width: 100%;
+.cards img {
+  max-width: 80%;
   border-radius: 8px;
   margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  height: 100%;
 }
 
 .card h3 {
@@ -86,21 +97,24 @@ header p {
 }
 
 /* Avatar Styling */
-.avatar {
+/* .avatar {
   width: 100px;
   height: 100px;
   overflow: hidden;
   border: 2px solid #fff;
   margin-bottom: 10px;
   
-}
+} */
 
-.avatar img {
+/* .avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 
-}
+} */
 
 /* Footer Styling */
 footer {
@@ -112,4 +126,18 @@ footer {
 footer p {
   font-size: 14px;
   color: #6d6d6d;
+}
+.section .btns a{
+  text-decoration: none;
+  color: black;
+}
+.section .btns{
+  padding: 10px;
+  border-radius: 10px;
+  margin: 10px;
+  cursor: pointer;
+  transition: 0.5s;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;  
 }

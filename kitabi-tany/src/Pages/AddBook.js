@@ -79,6 +79,7 @@ const AddBook = () => {
 
   return (
     <div className="add-book-container" style={{ direction: "rtl" }}>
+      <a href="/login">تسجيل الدخول</a>
       <h2>إضافة كتاب جديد</h2>
       <form onSubmit={handleSubmit}>
         <input
