@@ -1,8 +1,12 @@
 import Router from "../../Router/Router";
+import Header from "../Shared/Header.js";
 
 function App() {
   return (
-    <Router />
+    <div className="App">
+      <Header />
+      <Router />
+    </div>
   );
 }
 

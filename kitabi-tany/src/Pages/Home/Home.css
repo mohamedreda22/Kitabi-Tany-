@@ -1,0 +1,120 @@
+/* General Container */
+.home-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: #333;
+    position: absolute;
+    top: 3%;
+    right: 5%;
+  }
+  
+  /* Hero Header Section */
+  .hero-header {
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .hero-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  .auth-buttons .btn {
+    padding: 10px 20px;
+    font-size: 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .auth-buttons .btn-primary {
+    background-color: #0056b3;
+    color: white;
+  }
+  
+  .auth-buttons .btn-primary:hover {
+    background-color: #003d80;
+  }
+  
+  .auth-buttons .btn-secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+  
+  .auth-buttons .btn-secondary:hover {
+    background-color: #545b62;
+  }
+  
+  /* Recommendations Section */
+  .recommendations-section {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .recommendations-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+  }
+  .book-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    display: flex;
+  }
+  
+  .book-card {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  .book-card img {
+    width: 100%;
+    border-radius: 5px;
+    max-height: 200px;
+  }
+  
+  .book-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  
+  .book-card p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  .book-card .btn-details {
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .book-card .btn-details:hover {
+    background-color: #0056b3;
+  }
+  

@@ -169,10 +169,22 @@ const Profile = () => {
     };
 
     // Handle theme toggle
-    const handleThemeToggle = () => {
+/*     const handleThemeToggle = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    }; */
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        document.documentElement.className = savedTheme;
+    }, []);
+    
+    const handleThemeToggle = () => {
+        const newTheme = theme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+        document.documentElement.className = newTheme;
+        localStorage.setItem('theme', newTheme);
     };
-
+    
     // Handle logout
     const handleLogOut = () => {
         Cookies.remove('userId');

@@ -85,15 +85,24 @@ header p {
   height: 100%;
 }
 
+
 .card h3 {
   font-size: 20px;
   color: #3d3d3d;
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .card p {
   color: #6d6d6d;
   font-size: 16px;
+}
+.card .cover{
+  width: 80%;
+  height: 200px;
+  padding: 5px;
+  border-radius: 10px;
+  object-fit: contain;
 }
 
 /* Avatar Styling */

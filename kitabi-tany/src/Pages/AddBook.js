@@ -67,6 +67,7 @@ const AddBook = () => {
           coverPhoto: "",
           category: "روايات",
         });
+        window.location.href = "/"; // Redirect to home page
       } else {
         const errorData = await response.json();
         alert(`فشل في إضافة الكتاب: ${errorData.message || "حدث خطأ غير متوقع"}`);
@@ -79,7 +80,10 @@ const AddBook = () => {
 
   return (
     <div className="add-book-container" style={{ direction: "rtl" }}>
-      <a href="/login">تسجيل الدخول</a>
+      <div className="navbar">
+            <a href="/home">العودة</a>
+            <a href="/profile">الملف الشخصي</a></div>
+      
       <h2>إضافة كتاب جديد</h2>
       <form onSubmit={handleSubmit}>
         <input

@@ -11,6 +11,7 @@ router.delete('/:id', isAuth, bookController.deleteBook);
 //Public
 router.get('/search', bookController.searchBooks);
 router.get('/filter', bookController.filterBooks);
+router.get('/recent', bookController.getRecentBooks);
 router.get('/', bookController.getAllBooks);
 router.get('/:id', bookController.getBookById);
 

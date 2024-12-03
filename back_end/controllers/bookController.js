@@ -133,6 +133,15 @@ const searchBooks = async (req, res) => {
     }
 };
 
+const getRecentBooks = async (req, res) => {
+    try {
+        const books = await Book.find({}).sort({ createdAt: -1 }).limit(5);
+        res.status(200).json(books);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 
 module.exports = {
     createBook,
@@ -142,4 +151,5 @@ module.exports = {
     deleteBook,
     filterBooks,
     searchBooks,
+    getRecentBooks,
 };

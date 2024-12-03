@@ -25,6 +25,13 @@ body{
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   }
+  .add-book-container .navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    text-decoration: none;
+  }
   
   /* Form Header */
   .add-book-container h2 {
@@ -47,9 +54,11 @@ body{
   }
   
   form input[type="text"],
+  form input[type="number"],
+  form input[type="file"],
   form textarea,
   form select {
-    padding: 12px;
+    padding: 2.1px;
     border: 1px solid #d4c8b4;
     border-radius: 8px;
     background-color: #faf8f4;
@@ -59,8 +68,7 @@ body{
   }
   
   form textarea {
-    resize: none;
-    height: 100px;
+    height: 80px;
   }
   
   form input:focus,
