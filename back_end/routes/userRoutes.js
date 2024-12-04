@@ -159,6 +159,11 @@ router.get('/', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+router.get('/logout',async (req,res)=>{
+    res.clearCookie('userId');
+    res.clearCookie('token');
+    res.json({message:'Logged out successfully'});
+})
 
 // User login
 router.post('/login', async (req, res) => {

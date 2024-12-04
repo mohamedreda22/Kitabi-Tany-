@@ -139,3 +139,13 @@ export const deleteUser = async (userId) => {
         throw error;
     }
 };
+
+// logout clear all the cookies and redirect to route '/'
+export const logout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+    window.location.href = '/';
+};
+
+

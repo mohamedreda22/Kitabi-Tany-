@@ -3,6 +3,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import '../assets/css/Profile.css';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
     const [formData, setFormData] = useState({
@@ -221,7 +222,10 @@ const Profile = () => {
                             onChange={handleThemeToggle}
                         />
                         <label htmlFor="themeToggle" className="toggle-label"></label>
-                    </div>
+                    </div>&nbsp;
+                    <Link to="/home">
+                        <button className="logout-btn" style={{backgroundColor:"green"}}>العودة الى الصفحة الرئيسية</button>
+                    </Link>
                 </div>
             </div>
             <div className="content">

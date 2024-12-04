@@ -8,6 +8,8 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState(null);
+  const [profilePic, setProfilePic] = useState(null);
+
 
   useEffect(() => {
     // Fetch books from the backend API
@@ -18,6 +20,7 @@ const HomePage = () => {
 
     // Fetch cart data from the backend
     fetchCart();
+    fetchProfilePic();
   }, []);
 
   const fetchCart = async () => {
@@ -103,6 +106,14 @@ const HomePage = () => {
     return cart?.items.reduce((total, item) => total + item.book.price * item.quantity, 0) || 0;
   };
 
+  const handelLogout =()=>{
+    Cookies.remove("token");
+    Cookies.remove("userId");
+    Cookies.remove("userRole");
+    Cookies.remove("profilePic");
+    window.location.replace("/")
+  }
+
   const handleOrder = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/order/placeOrder", {
@@ -124,12 +135,28 @@ const HomePage = () => {
       alert("حدث خطأ أثناء عملية الشراء");
     }
   };
+  const userId = Cookies.get("userId")
+
+  const fetchProfilePic=()=>{
+    fetch(`http://localhost:5000/api/users/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${Cookies.get("token")}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Profile data:", data);
+         setProfilePic(data.profilePicture);
+         Cookies.set("userRole",data.role)
+      })
+      .catch((error) => console.error("Error fetching profile picture:", error));
+  }
+
 
   return (
     <div className="container" style={{ direction: "rtl" }}>
-      <div className="profilePic">
-
-      </div>
+      <div className="navbar">
+      {Cookies.get("userRole") === "buyer" && (
       <div className="cart">
         <button onClick={toggleCart} className="cart-button">
           <img src="/cart.png" alt="Cart" className="cart-icon" />
@@ -159,20 +186,52 @@ const HomePage = () => {
             )}
           </div>
         )}
-      </div>
+      
+      </div>)}
+      <button onClick={handelLogout} className="logout">تسجيل الخروج</button>
+      {Cookies.get("userRole") === "admin" && (
+        <button className="admin-btn">
+        <a href="/admin-dashboard">لوحة التحكم</a>
+      </button>
+      )}
 
+      <div className="profilePic">
+      <Link to="/profile">
+        <img
+          src={
+            profilePic
+              ? `http://localhost:5000/profile_pictures/${profilePic}`
+            
+  //  `http://localhost:5000/profile_pictures/${user.profilePicture}
+
+              : "/My_Logo.jpg"
+          }
+          alt="Profile"
+          className="profile"
+        />
+        </Link>
+      </div>
+</div>
       <header>
         <h1>مرحبًا بك في اقرأ تاني</h1>
         <p>استعرض أفضل الكتب بأحدث الإضافات.</p>
       </header>
 
       <section className="section">
+  
+     
+      {Cookies.get("userRole") === "seller" && (
+        <>
         <h2>أحدث الكتب المضافة</h2>
-        <button className="btns">
-          <a href="/add-book">إضافة كتاب جديد</a>
-        </button>
-      </section>
-
+         <button className="btns">
+        <a href="/add-book">إضافة كتاب جديد</a>
+          </button>
+          <button className="btns">
+            <a href="/seller-dashboard">لوحة التحكم</a>
+          </button>
+        </>
+      )}
+ </section>
       <section className="section">
         <input
           type="text"
@@ -199,7 +258,9 @@ const HomePage = () => {
               <p>السعر: {book.price} جنيه</p>
               <p>الحالة: {book.condition}</p>
               <p>التصنيف: {book.category}</p>
+              {Cookies.get("userRole") === "buyer" && (
               <button onClick={() => addToCart(book._id)} className="btn">أضف إلى العربة</button>
+              )}
             </div>
           ))}
         </div>

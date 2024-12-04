@@ -2,7 +2,7 @@
 .home-container {
     font-family: Arial, sans-serif;
     padding: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(256, 256, 256, 0.35);
     border-radius: 8px;
     color: #333;
     position: absolute;
@@ -82,7 +82,7 @@
   }
   
   .book-card {
-    background-color: #fff;
+    background-color: rgba(256, 256, 256, 0.45);
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
