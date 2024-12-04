@@ -38,29 +38,6 @@ const HomePage = () => {
     }
   };
 
-/*   const addToCart = async (bookId) => {
-    try {
-      const response = await fetch("http://localhost:5000/api/cart/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${Cookies.get("token")}`,
-        },
-        body: JSON.stringify({ bookId }),
-      });
-
-      if (response.ok) {
-        fetchCart(); // Refresh cart data
-        alert("تمت إضافة الكتاب إلى العربة بنجاح");
-      } else {
-        const error = await response.json();
-        alert(`فشل في إضافة الكتاب: ${error.message}`);
-      }
-    } catch (error) {
-      console.error("Error adding book to cart:", error);
-      alert("حدث خطأ أثناء إضافة الكتاب إلى العربة");
-    }
-  }; */
   const addToCart = async (bookId) => {
     try {
         const response = await fetch("http://localhost:5000/api/cart/add", {
@@ -150,6 +127,9 @@ const HomePage = () => {
 
   return (
     <div className="container" style={{ direction: "rtl" }}>
+      <div className="profilePic">
+
+      </div>
       <div className="cart">
         <button onClick={toggleCart} className="cart-button">
           <img src="/cart.png" alt="Cart" className="cart-icon" />

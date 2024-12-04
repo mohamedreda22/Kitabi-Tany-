@@ -18,7 +18,9 @@ const Login = () => {
             const data = await loginUser(formData);
             Cookies.set('token', data.token, { expires: 7 });
             Cookies.set('userId', data.userId, { expires: 7 });
-            console.log("what us inside the data??", data);
+            Cookies.set('userRole', data.userRole, { expires: 7 }); 
+            console.log("what us inside the data??", data); 
+            console.log("Login data:", data);
             window.location.href = '/home'; 
             // Success alert
             Swal.fire({
@@ -29,6 +31,12 @@ const Login = () => {
                 timer: 1500,
                 showConfirmButton: false
             });
+                // Navigate based on role
+            if (data.userRole === 'admin') {
+                window.location.href = '/admin-dashboard'; // Example route for admin
+            } else {
+                window.location.href = '/home'; // Default route for regular users
+            }
          } catch (err) {
             // Extract error message properly
             const errorMessage = err.response?.data?.message || 'حدث خطأ أثناء محاولة تسجيل الدخول';

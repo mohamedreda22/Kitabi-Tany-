@@ -45,6 +45,8 @@ exports.login = async (req, res) => {
         }
         const token = await authService.generateToken({ userId: user._id });
         const refreshToken = await authService.generateRefreshToken({ userId: user._id });
+        const userRole = user.role;
+        res.status(200).json({ token, refreshToken, userRole });
         res.status(200).json({ token, refreshToken });
     } catch (error) {
         res.status(500).json({ message: error.message });

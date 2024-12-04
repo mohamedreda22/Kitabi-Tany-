@@ -185,7 +185,7 @@ router.post('/login', async (req, res) => {
         // console.log('User ID string:', user._id.toString());
         // Generate JWT token
         const token = jwt.sign(
-            { id: user._id, username: user.username  },
+            { id: user._id, username: user.username , role: user.role },
             process.env.SECRET_KEY, 
             { expiresIn: '1h' }
         );
@@ -209,7 +209,7 @@ router.post('/login', async (req, res) => {
             maxAge: 3600000 
         });
 
-        res.json({ message: 'Login successful', token:token , userId: user._id });
+        res.json({ message: 'Login successful', token:token , userId: user._id , user: user });
     } catch (error) {
         console.error("Login Error:", error);
         res.status(500).json({ message: 'Server error' });

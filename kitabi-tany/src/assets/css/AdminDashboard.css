@@ -1,0 +1,88 @@
+.admin-dashboard {
+    padding: 20px;
+    font-family: 'IBM Plex Sans Arabic", sans-serif'; 
+    height: 100vh;
+}
+
+.admin-dashboard h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.dashboard-content {
+    background-color: rgb(256, 256, 256,0.2);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.dashboard-content h2{
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    justify-content: center;
+    display: flex;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    background-color: rgb(256, 256, 256, 0.3);
+
+}
+
+
+table th {
+    background-color: rgb(76, 175, 80, 0.7);
+    color: white;
+    text-align: center;
+}
+
+.delete-btn {
+    color: #fff;
+    background-color: #d33;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #a10;
+}
+.edit-btn {
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.save-btn{
+    color: #fff;
+    background-color: #28a745;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.cancel-btn{
+    color: #fff;
+    background-color: #dc3545;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.user-photo{
+    max-height: 100px;
+    border-radius: 10%;
+    overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
