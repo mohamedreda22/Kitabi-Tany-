@@ -7,5 +7,8 @@ const isAuth = require('../middleware/isAuth');
 router.get('/', isAuth, cartController.getCart);
 router.post('/add', isAuth, cartController.addToCart);
 router.post('/remove', isAuth, cartController.removeFromCart);
+router.post('/checkout', isAuth, cartController.checkout);
+router.put('/update', isAuth, cartController.updateCartItem);
+
 
 module.exports = router;

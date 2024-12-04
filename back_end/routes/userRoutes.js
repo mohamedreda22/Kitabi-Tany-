@@ -141,6 +141,24 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+// Get the profile picture of the user
+router.get('/profilePicture/:filename', (req, res) => {
+    const filename = req.params.filename;
+    console.log('Profile picture filename:', filename);
+    res.sendFile(path.join(__dirname, 'Uploads/Profile_pictures/default.jpg'));
+
+});
+
+// Get all users
+router.get('/', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        console.error("Fetch Users Error:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // User login
 router.post('/login', async (req, res) => {

@@ -6,8 +6,9 @@ import Cookies from 'js-cookie';
 const BookDetail = () => {
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const addToCart = async () => {
+/*   const addToCart = async () => {
     try {
       const response = await fetch("http://localhost:5000/api/cart/add", {
         method: "POST",
@@ -30,8 +31,33 @@ const BookDetail = () => {
       console.error("Error adding book to cart:", error);
       alert("حدث خطأ أثناء إضافة الكتاب إلى القائمة");
     }
+  }; */
+  const addToCart = async () => {
+    setLoading(true); // Disable button
+    try {
+      const response = await fetch("http://localhost:5000/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+        body: JSON.stringify({ bookId }),
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert("تمت إضافة الكتاب إلى القائمة بنجاح");
+      } else {
+        alert(`فشل في إضافة الكتاب: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Error adding book to cart:", error);
+      alert("حدث خطأ أثناء إضافة الكتاب إلى القائمة");
+    } finally {
+      setLoading(false); // Enable button
+    }
   };
-
   useEffect(() => {
     // Fetch book details
     fetch(`http://localhost:5000/api/books/${bookId}`)

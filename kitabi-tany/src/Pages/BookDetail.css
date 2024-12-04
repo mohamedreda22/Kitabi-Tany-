@@ -60,18 +60,21 @@
 }
 
 .add-to-cart-btn {
-  padding: 12px 25px;
-  font-size: 16px;
-  background-color: #ffa41b;
+  background-color: #4caf50;
   color: white;
   border: none;
+  padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .add-to-cart-btn:hover {
-  background-color: #ff8c00;
+  background-color: #38803c;
+}
+.add-to-cart-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 /* Description Section */
