@@ -86,3 +86,16 @@ table th {
     margin-right: auto;
     display: block;
 }
+.header-btn{
+display: flex;
+justify-content: space-between;
+}
+.header-btn a{
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}

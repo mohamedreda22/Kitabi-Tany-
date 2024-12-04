@@ -49,11 +49,31 @@ const placeOrder = async (req, res) => {
     }
 };
 
+const getOrders = async (req, res) => {
+    try {
+        const order = await Order.findById(orderId)
+    .populate('buyer', 'username')  // Populating the buyer's username
+    .populate('books.book', 'title price');  // Populating each book's title and price
+
+        // const orders = await Order.find().populate('buyer', 'username').populate('books.book', 'title');
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({ message: 'No orders found' });
+        }
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error("Error retrieving orders:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 
 const getBuyerOrders = async (req, res) => {
     try {
-        const orders = await Order.find({ buyer: req.userId }).populate('books.book');
+        const order = await Order.findById(orderId)
+    .populate('buyer', 'username')  // Populating the buyer's username
+    .populate('books.book', 'title price');  // Populating each book's title and price
+
+        // const orders = await Order.find({ buyer: req.userId }).populate('books.book');
         if (!orders || orders.length === 0) {
             return res.status(404).json({ message: 'No orders found' });
         }
@@ -85,6 +105,88 @@ const getSellerOrders = async (req, res) => {
     }
 };
 
+const getOrderById = async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        const order = await Order.findById(orderId).populate('buyer', 'username').populate('books.book');
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+        res.status(200).json(order);
+    } catch (error) {
+        console.error("Error retrieving order by ID:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Confirm Order and Notify Buyer
+const confirmOrder = async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        const order = await Order.findById(orderId).populate('buyer', 'username');
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        order.status = 'completed';
+        await order.save();
+
+        // Notify
+        const message = 'Your order has been confirmed';
+        await createNotification(order.buyer._id, message);
+
+        res.status(200).json({ message: 'Order confirmed successfully', order });
+    } catch (error) {
+        console.error("Error confirming order:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Cancel Order and Notify Buyer
+const cancelOrder = async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        const order = await Order.findById(orderId).populate('buyer', 'username');
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        order.status = 'cancelled';
+        await order.save();
+
+        // Notify
+        const message = 'Your order has been cancelled';
+        await createNotification(order.buyer._id, message);
+
+        res.status(200).json({ message: 'Order cancelled successfully', order });
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Return Order and Notify Buyer
+const returnOrder = async (req, res) => {
+    const { orderId } = req.params;
+    try {
+        const order = await Order.findById(orderId).populate('buyer', 'username');
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        order.status = 'returned';
+        await order.save();
+
+        // Notify
+        const message = 'Your order has been returned';
+        await createNotification(order.buyer._id, message);
+
+        res.status(200).json({ message: 'Order returned successfully', order });
+    } catch (error) {
+        console.error("Error returning order:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Update Order Status and Notify Buyer
 const updateOrderStatus = async (req, res) => {
@@ -120,5 +222,10 @@ module.exports = {
     placeOrder,
     getBuyerOrders,
     getSellerOrders,
-    updateOrderStatus
+    updateOrderStatus,
+    getOrders,
+    getOrderById,
+    confirmOrder,
+    cancelOrder,
+    returnOrder,
 };

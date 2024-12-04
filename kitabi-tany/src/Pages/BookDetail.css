@@ -133,3 +133,20 @@
 .back-btn:hover {
   background-color: #005e6b;
 }
+.book-card-date {
+  padding: 10px; /* Padding for the date */
+  font-size: 2rem; /* Adjust font size for the day */
+  font-weight: bold; /* Make the day bold */
+  margin-bottom: 5px; /* Add some space between the day and the month */
+  text-align: center; /* Center the date */
+}
+.day {
+  font-size: 2.6rem; /* Adjust font size for the month */
+  color: #d61c1c; /* Color for the day */
+}
+
+.event-card-month {
+  font-size: 1.3rem; /* Adjust font size for the month */
+  color: #777; /* Color for the month */
+  text-transform: uppercase; /* Uppercase the month */
+}

@@ -70,7 +70,17 @@ header p {
 .section .btns:hover {
   background-color: #d4c8b4; /* Slight hover effect */
 }
-
+.section input[type="text"]{
+  width: 50%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #d4c8b4;
+  margin-bottom: 10px;
+  text-align: center;
+  background-image: url('https://img.icons8.com/ios/452/search--v1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
 /* Cards Container */
 .cards {
   display: flex;

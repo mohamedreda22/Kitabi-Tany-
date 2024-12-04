@@ -3,35 +3,42 @@ import { useParams } from "react-router-dom";
 import "./BookDetail.css";
 import Cookies from 'js-cookie';
 
+
 const BookDetail = () => {
   const { bookId } = useParams();
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [seller, setSeller] = useState(null);
 
-/*   const addToCart = async () => {
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+
+    const day = dateTime.getDate();
+    const month = dateTime.toLocaleString('default', { month: 'long' });
+    return { day, month };
+};
+
+
+  const userData = async (sellerId) => {
     try {
-      const response = await fetch("http://localhost:5000/api/cart/add", {
-        method: "POST",
+      const response = await fetch(`http://localhost:5000/api/users/${sellerId}`, {
         headers: {
-          "Content-Type": "application/json",
-          //the token stored in the cookies
           Authorization: `Bearer ${Cookies.get("token")}`,
         },
-        body: JSON.stringify({ bookId }),
       });
-
-      const result = await response.json();
-
       if (response.ok) {
-        alert("تمت إضافة الكتاب إلى القائمة بنجاح");
+        const data = await response.json();
+        setSeller(data.username);
       } else {
-        alert(`فشل في إضافة الكتاب: ${result.message}`);
+        console.error("Failed to fetch user data");
       }
     } catch (error) {
-      console.error("Error adding book to cart:", error);
-      alert("حدث خطأ أثناء إضافة الكتاب إلى القائمة");
+      console.error("Error fetching user data:", error);
     }
-  }; */
+  };
+  
+        
+
   const addToCart = async () => {
     setLoading(true); // Disable button
     try {
@@ -59,6 +66,12 @@ const BookDetail = () => {
     }
   };
   useEffect(() => {
+    if (book && book.seller) {
+      userData(book.seller);
+    }
+  }, [book]);
+  
+  useEffect(() => {
     // Fetch book details
     fetch(`http://localhost:5000/api/books/${bookId}`)
       .then((response) => response.json())
@@ -69,6 +82,7 @@ const BookDetail = () => {
   if (!book) {
     return <div>Loading...</div>;
   }
+  const { day, month } = book.createdAt ? formatDateTime(book.createdAt) : { day: "", month: "" };
 
   return (
     <div className="book-detail-container">
@@ -86,7 +100,16 @@ const BookDetail = () => {
           <div className="price-section">
             <p>السعر: <span className="price">{book.price} جنيه</span></p>
           </div>
-          <button className="add-to-cart-btn" onClick={addToCart}>أضف إلى القائمة</button>
+          {Cookies.get("userRole") === "buyer" && (
+            <button
+            className="add-to-cart-btn"
+            onClick={addToCart}
+            disabled={loading}
+          >
+            {loading ? "جار الإضافة..." : "أضف إلى القائمة"}
+          </button>
+          )}
+
         </div>
       </div>
 
@@ -97,7 +120,11 @@ const BookDetail = () => {
 
       <div className="additional-info">
         <p><strong>الحالة:</strong> {book.condition}</p>
-        <p><strong>تاريخ النشر:</strong> {book.publishDate || "غير متوفر"}</p>
+        <div className="book-card-date" >
+                        <span className="day">{day}</span> 
+                        <span className="event-card-month">{month}</span>
+        </div>
+        <p><strong>الناشر:</strong> {seller || "غير متوفر"}</p>
       </div>
 
       <div className="actions-section">

@@ -14,6 +14,7 @@ const Register = lazy(() => import("../Pages/Register.js"));
 const Profile = lazy(() => import("../Pages/Profile.js"));
 const BookDetail = lazy(() => import("../Pages/BookDetail")); // Lazy load the BookDetail component
 const AdminDashboard = lazy(() => import("../Pages/AdminDashboard.js"));
+const Orders = lazy(() => import("../Pages/Orders.js"));
 const Router = () => {
     const AdminRoute = ({ children }) => {
         const userRole = Cookies.get('userRole');
@@ -27,6 +28,7 @@ const Router = () => {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                    <Route path="/orders" element={<AdminRoute><Orders/></AdminRoute>} />
                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                     <Route path="/add-book" element={<PrivateRoute><AddBook /></PrivateRoute>} />
                     <Route path="/home" element={<HomePage />} />

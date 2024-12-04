@@ -94,7 +94,10 @@ const AdminDashboard = () => {
                 <p>Loading...</p>
             ) : (
                 <div className="dashboard-content">
+                    <div className="header-btn">
                     <Link to="/home">العوده</Link>
+                    <Link to="/orders">الطلبات</Link>
+                    </div>
                     <h2>التحكم بالمستخدمين</h2>
                     <table>
                         <thead>
