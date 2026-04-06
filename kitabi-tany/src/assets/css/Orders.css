@@ -1,65 +1,77 @@
 .orders {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.orders h1 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 40px;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
 .order {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s;
 }
 
-.order h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #333;
-}
-
-.order h2 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #333;
+.order:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
 }
 
 .order h3 {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #333;
+    color: var(--secondary-color);
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
 }
 
 .order p {
-  font-size: 1rem;
-  font-weight: 400;
-  color: #333;
+    margin-bottom: 10px;
+    font-size: 1.05rem;
 }
 
-.order button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #fff;
-  background-color: #333;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.order ul {
+    background-color: var(--background-color);
+    padding: 15px;
+    border-radius: var(--border-radius-md);
+    margin: 15px 0;
 }
 
-.spinner {
-    border: 4px solid #f3f3f3; /* Light grey */
-    border-top: 4px solid #3498db; /* Blue */
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 2s linear infinite;
+.order ul li {
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border-color);
 }
 
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+.order ul li:last-child {
+    border-bottom: none;
+}
+
+.order ul li a {
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.order ul li a:hover {
+    text-decoration: underline;
+}
+
+.order .total-price {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    text-align: left;
+    margin-top: 15px;
 }

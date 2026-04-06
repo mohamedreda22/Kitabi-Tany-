@@ -1,120 +1,158 @@
-/* General Container */
 .home-container {
-    font-family: Arial, sans-serif;
-    padding: 20px;
-    background-color: rgba(256, 256, 256, 0.35);
-    border-radius: 8px;
-    color: #333;
-    position: absolute;
-    top: 3%;
-    right: 5%;
-  }
-  
-  /* Hero Header Section */
-  .hero-header {
+    padding: 0;
+    width: 100%;
+}
+
+/* Hero Header Section */
+.hero-header {
+    background: linear-gradient(rgba(46, 125, 50, 0.8), rgba(27, 94, 32, 0.8)), url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+    background-size: cover;
+    background-position: center;
     color: white;
-    padding: 40px 20px;
+    padding: 120px 20px;
     text-align: center;
-    border-radius: 8px;
-    margin-bottom: 40px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .hero-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 15px;
-  }
-  
-  .hero-content p {
-    font-size: 1.2rem;
+    margin-bottom: 0;
+    box-shadow: var(--shadow-lg);
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
     margin-bottom: 20px;
-  }
-  
-  .auth-buttons {
+    font-weight: 900;
+}
+
+.hero-content p {
+    font-size: 1.5rem;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.auth-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
-  }
-  
-  .auth-buttons .btn {
-    padding: 10px 20px;
-    font-size: 1rem;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .auth-buttons .btn-primary {
-    background-color: #0056b3;
-    color: white;
-  }
-  
-  .auth-buttons .btn-primary:hover {
-    background-color: #003d80;
-  }
-  
-  .auth-buttons .btn-secondary {
-    background-color: #6c757d;
-    color: white;
-  }
-  
-  .auth-buttons .btn-secondary:hover {
-    background-color: #545b62;
-  }
-  
-  /* Recommendations Section */
-  .recommendations-section {
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .recommendations-section h2 {
-    font-size: 1.8rem;
-    margin-bottom: 10px;
-  }
-  .book-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
-    display: flex;
-  }
-  
-  .book-card {
-    background-color: rgba(256, 256, 256, 0.45);
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  .book-card img {
-    width: 100%;
-    border-radius: 5px;
-    max-height: 200px;
-  }
-  
-  .book-card h3 {
+}
+
+.auth-buttons a {
+    padding: 1rem 3rem;
     font-size: 1.2rem;
-    margin-bottom: 10px;
-  }
-  
-  .book-card p {
-    font-size: 1rem;
-    margin-bottom: 15px;
-  }
-  
-  .book-card .btn-details {
-    display: inline-block;
-    padding: 8px 12px;
+    border-radius: 50px;
+    font-weight: 700;
+    transition: all 0.3s;
     text-decoration: none;
-    background-color: #007bff;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
     color: white;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-  }
-  
-  .book-card .btn-details:hover {
-    background-color: #0056b3;
-  }
-  
+}
+
+.btn-primary:hover {
+    background-color: #e68a00;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+}
+
+.btn-secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 2px solid white;
+}
+
+.btn-secondary:hover {
+    background-color: white;
+    color: var(--primary-dark);
+    transform: translateY(-3px);
+}
+
+/* Stats Section */
+.stats-section {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    padding: 60px 20px;
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+/* Recommendations Section */
+.recommendations-section {
+    padding: 80px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+}
+
+.book-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+.no-data {
+    padding: 40px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed var(--border-color);
+    text-align: center;
+}
+
+.no-data p {
+    margin-bottom: 20px;
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+    .auth-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    .stats-section {
+        flex-direction: column;
+        gap: 40px;
+    }
+}
