@@ -33,6 +33,9 @@ const Navbar = () => {
                         {userRole === 'admin' && (
                             <Link to="/admin-dashboard">لوحة التحكم</Link>
                         )}
+                        {userRole === 'buyer' && (
+                            <Link to="/orders">طلباتي</Link>
+                        )}
                         <Link to="/profile" className="profile-link">
                             <img
                                 src={profilePic ? `${IMAGE_BASE_URL}/profile_pictures/${profilePic}` : "/My_Logo.jpg"}

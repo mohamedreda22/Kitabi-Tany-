@@ -64,6 +64,9 @@ const BookDetail = () => {
 
   return (
     <div className="book-detail-container" dir="rtl">
+      <div className="page-header-actions">
+            <button className="btn-back" onClick={() => navigate(-1)}>رجوع</button>
+      </div>
       <div className="top-section">
         <div className="image-section">
           <img
@@ -97,17 +100,23 @@ const BookDetail = () => {
       </div>
 
       <div className="additional-info">
-        <p><strong>الحالة:</strong> {book.condition}</p>
-        <div className="book-date">
-            <span className="day">{day}</span>
-            <span className="month">{month}</span>
+        <div className="info-item">
+          <span className="info-label">الحالة</span>
+          <span className="info-value">{book.condition}</span>
         </div>
-        <p><strong>الناشر:</strong> {sellerName || "غير متوفر"}</p>
+        <div className="info-item">
+          <span className="info-label">تاريخ النشر</span>
+          <div className="book-date">
+              <span className="day">{day}</span>
+              <span className="month">{month}</span>
+          </div>
+        </div>
+        <div className="info-item">
+          <span className="info-label">الناشر</span>
+          <span className="info-value">{sellerName || "غير متوفر"}</span>
+        </div>
       </div>
 
-      <div className="actions-section">
-        <button className="back-btn" onClick={() => navigate(-1)}>رجوع</button>
-      </div>
     </div>
   );
 };

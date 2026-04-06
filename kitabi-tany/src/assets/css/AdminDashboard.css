@@ -65,11 +65,17 @@ table td {
     border: 2px solid var(--primary-light);
 }
 
+.admin-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
 .edit-btn, .delete-btn, .save-btn, .cancel-btn {
     padding: 0.5rem 1rem;
     border-radius: var(--border-radius-sm);
     font-weight: 600;
-    margin-left: 5px;
+    white-space: nowrap;
 }
 
 .edit-btn { background-color: var(--secondary-color); color: white; }

@@ -1,77 +1,124 @@
-.orders {
-    max-width: 1000px;
+.orders-container {
+    max-width: 900px;
     margin: 40px auto;
     padding: 0 20px;
 }
 
-.orders h1 {
+.page-header {
     text-align: center;
     color: var(--primary-color);
     margin-bottom: 40px;
+    font-weight: 800;
+}
+
+.no-orders {
+    text-align: center;
+    padding: 50px;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-lg);
+    color: var(--text-light);
 }
 
 .orders-list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 25px;
 }
 
-.order {
-    background-color: var(--surface-color);
+.order-card {
+    background: var(--surface-color);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
-    padding: 25px;
     border: 1px solid var(--border-color);
-    transition: transform 0.3s;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.order:hover {
+.order-card:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-lg);
 }
 
-.order h3 {
-    color: var(--secondary-color);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
+.order-header {
+    background: var(--primary-light);
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: 10px;
 }
 
-.order p {
-    margin-bottom: 10px;
-    font-size: 1.05rem;
+.order-header h3 {
+    margin: 0;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
 }
 
-.order ul {
-    background-color: var(--background-color);
+.order-status {
+    background: var(--secondary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.order-body {
+    padding: 20px 25px;
+}
+
+.order-books {
+    margin: 15px 0;
+    background: var(--background-color);
     padding: 15px;
     border-radius: var(--border-radius-md);
-    margin: 15px 0;
 }
 
-.order ul li {
+.order-books ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0 0;
+}
+
+.order-books li {
+    display: flex;
+    justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px dashed var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
-.order ul li:last-child {
+.order-books li:last-child {
     border-bottom: none;
 }
 
-.order ul li a {
+.order-books li a {
     color: var(--primary-color);
-    font-weight: 700;
+    font-weight: 600;
+    text-decoration: none;
 }
 
-.order ul li a:hover {
-    text-decoration: underline;
+.order-books li a:hover {
+    color: var(--secondary-color);
 }
 
-.order .total-price {
-    font-size: 1.25rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    text-align: left;
+.book-price {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.order-footer {
+    border-top: 2px solid var(--border-color);
     margin-top: 15px;
+    padding-top: 15px;
+}
+
+.total-price {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    text-align: left;
+}
+
+.total-price span {
+    color: var(--secondary-color);
+    font-size: 1.4rem;
 }

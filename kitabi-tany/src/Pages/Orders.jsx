@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getOrders } from '../services/ordersService.jsx';
+import { getOrders } from '../services/ordersService';
 import Swal from 'sweetalert2';
 import '../assets/css/Orders.css';
 import { Link } from 'react-router-dom';
@@ -8,16 +8,16 @@ const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
 
-/*     useEffect(() => {
+    useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const ordersData = await getOrders();
                 setOrders(ordersData);
             } catch (error) {
-                const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
+                const errorMessage = error.response?.data?.message || 'فشل في جلب الطلبات';
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error Fetching Orders',
+                    title: 'خطأ',
                     text: errorMessage,
                 });
             } finally {
@@ -25,84 +25,46 @@ const Orders = () => {
             }
         };
         fetchOrders();
-    }, []); */
+    }, []);
 
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const ordersData = await getOrders(); // Fetch orders from service
-                setOrders(ordersData); // Update state with fetched orders
-            } catch (error) {
-                const errorMessage = error.response?.data?.message || 'An unexpected error occurred';
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error Fetching Orders',
-                    text: errorMessage, // Show the error message
-                });
-            } finally {
-                setLoading(false); // Set loading to false once data fetch is complete
-            }
-        };
-        fetchOrders(); // Call the function to fetch orders
-    }, []); // Empty dependency array to fetch data once on mount
-    
-
-/*     return (
-        <div className="orders">
-            <h1>الطلبات</h1>
+    return (
+        <div className="orders-container" dir="rtl">
+            <h1 className="page-header">الطلبات الواردة</h1>
             {loading ? (
                 <div className="spinner"></div>
             ) : orders.length === 0 ? (
-                <p>لا توجد طلبات</p>
+                <p className="no-orders">لا توجد طلبات حالياً</p>
             ) : (
                 <div className="orders-list">
                     {orders.map((order) => (
-                        <div key={order._id} className="order">
-                            <h3>الطلب رقم {order._id}</h3>
-                            <p>المستخدم: {order.buyer.username}</p>
-                            <p>الكتب:</p>
-                            <ul>
-                                {order.books.map((book) => (
-                                    <li key={book._id}>
-                                        <Link to={`/book/${book._id}`}>{book.title}</Link>
-                                    </li>
-                                ))}
-                            </ul>
-                            <p>المبلغ: {order.totalPrice} ج.م</p>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    ); */
-    return (
-        <div className="orders">
-            <h1>الطلبات</h1>
-            {loading ? (
-                <div className="spinner"></div> // Show a loading spinner while fetching orders
-            ) : orders.length === 0 ? (
-                <p>لا توجد طلبات</p> // Message for no orders
-            ) : (
-                <div className="orders-list">
-                    {orders.map((order) => (
-                        <div key={order._id} className="order">
-                            <h3>الطلب رقم {order._id}</h3>
-                            <p>المستخدم: {order.buyer.username}</p>
-                            <p>الكتب:</p>
-                            <ul>
-                            {order.books.map((item) => (
-                              <li key={item.book._id}>
-                                  <Link to={`/book/${item.book._id}`}>{item.book.title}</Link> - {item.book.price} ج.م
-                    </li>
-                                ))}
-                            </ul>
-                            <p>المبلغ: {order.totalPrice} ج.م</p>
+                        <div key={order._id} className="order-card">
+                            <div className="order-header">
+                                <h3>الطلب #{order._id.substring(0, 8)}</h3>
+                                <span className="order-status">جديد</span>
+                            </div>
+                            <div className="order-body">
+                                <p><strong>العميل:</strong> {order.buyer.username}</p>
+                                <div className="order-books">
+                                    <p><strong>الكتب المطلوبة:</strong></p>
+                                    <ul>
+                                        {order.books.map((item) => (
+                                            <li key={item.book._id}>
+                                                <Link to={`/book/${item.book._id}`}>{item.book.title}</Link>
+                                                <span className="book-price">{item.book.price} ج.م</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <div className="order-footer">
+                                    <p className="total-price">إجمالي المبلغ: <span>{order.totalPrice} ج.م</span></p>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
             )}
         </div>
     );
-    };
+};
 
 export default Orders;
