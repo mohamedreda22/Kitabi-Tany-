@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
+import { getUserById, updateUser, deleteUser, logout } from '../services/userService';
+import { IMAGE_BASE_URL } from '../services/axiosInstance';
 import '../assets/css/Profile.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -17,60 +19,44 @@ const Profile = () => {
     const [theme, setTheme] = useState('light');
     const userId = Cookies.get('userId');
     const token = Cookies.get('token');
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
     useEffect(() => {
-        const userId = Cookies.get('userId');
-        const token = Cookies.get('token');
         if (!userId || !token) {
             Swal.fire({
                 icon: 'warning',
                 title: 'غير مصرح لك بالدخول',
                 text: 'الرجاء تسجيل الدخول للوصول الى هذه الصفحة',
             }).then(() => {
-                console.error('Unauthorized access to profile');
+                navigate('/login');
             });
         } else {
             fetchUserData();
         }
 
-        // Apply theme based on selected mode
-        document.body.className = theme;
-    }, [theme] );
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setTheme(savedTheme);
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(savedTheme);
+    }, [navigate, userId, token]);
 
     // Fetch user data
     const fetchUserData = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/users/${userId}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            const data = await getUserById(userId);
             setFormData({
-                username: response.data.username,
-                email: response.data.email,
+                username: data.username,
+                email: data.email,
                 password: '',
-                profilePicture: response.data.profilePicture,
-                role: response.data.role,
+                profilePicture: data.profilePicture,
+                role: data.role,
             });
-            setProfilePicturePreview(response.data.profilePicture);
+            setProfilePicturePreview(data.profilePicture);
         } catch (error) {
-            console.error('Error fetching user data:', error);
-            if (error.response && error.response.status === 401) {
-                Cookies.remove('userId');
-                Cookies.remove('token');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Session Expired',
-                    text: 'Please log in again.',
-                }).then(() => {
-                });
-            } else {
-                console.error('Error fetching user data:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to fetch user data.',
-                });
-            }
+            Swal.fire({
+                icon: 'error',
+                title: 'خطأ',
+                text: 'فشل في تحميل بيانات المستخدم.',
+            });
         }
     };
 
@@ -84,12 +70,12 @@ const Profile = () => {
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const validTypes = ['image/jpeg', 'image/png'];
+            const validTypes = ['image/jpeg', 'image/png', 'image/jpg'];
             if (!validTypes.includes(file.type)) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Invalid File Type',
-                    text: 'Please upload a JPEG or PNG image.',
+                    title: 'نوع ملف غير صالح',
+                    text: 'يرجى تحميل صورة بصيغة JPEG أو PNG.',
                 });
                 return;
             }
@@ -109,26 +95,20 @@ const Profile = () => {
         }
 
         try {
-            await axios.put(`${API_BASE_URL}/users/${userId}`, formPayload, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            await updateUser(userId, formPayload);
             Swal.fire({
                 icon: 'success',
-                title: 'Success',
-                text: 'Profile updated successfully!',
+                title: 'تم بنجاح',
+                text: 'تم تحديث الملف الشخصي بنجاح!',
                 timer: 1500,
                 showConfirmButton: false,
             });
             fetchUserData();
         } catch (error) {
-            console.error('Error updating profile:', error);
             Swal.fire({
                 icon: 'error',
                 title: 'خطأ',
-                text: 'خطا في تحديث البيانات الرجاء المحاولة مرة اخرى',
+                text: error.message || 'خطأ في تحديث البيانات الرجاء المحاولة مرة اخرى',
             });
         }
     };
@@ -148,18 +128,9 @@ const Profile = () => {
 
         if (confirmation.isConfirmed) {
             try {
-                await axios.delete(`${API_BASE_URL}/users/${userId}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
-                Cookies.remove('userId');
-                Cookies.remove('token');
-                Swal.fire({
-                    icon: 'success',
-                    title: 'حذف الحساب',
-                    text: 'تم حذف الحساب بنجاح',
-                });
+                await deleteUser(userId);
+                logout();
             } catch (error) {
-                console.error('Error deleting account:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'خطأ',
@@ -169,50 +140,41 @@ const Profile = () => {
         }
     };
 
-    // Handle theme toggle
-/*     const handleThemeToggle = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
-    }; */
-    useEffect(() => {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        setTheme(savedTheme);
-        document.documentElement.className = savedTheme;
-    }, []);
-    
     const handleThemeToggle = () => {
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
-        document.documentElement.className = newTheme;
+        document.documentElement.classList.remove('light', 'dark');
+        document.documentElement.classList.add(newTheme);
         localStorage.setItem('theme', newTheme);
     };
     
-    // Handle logout
     const handleLogOut = () => {
-        Cookies.remove('userId');
-        Cookies.remove('token');
-        window.location.href = '/';
+        logout();
     };
 
     return (
-        <div className="profile-container">
+        <div className="profile-container" dir="rtl">
             <div className="sidebar">
-            <div className="avatar">
-            {profilePicturePreview ? (
-                <img 
-                src={`http://localhost:5000/profile_pictures/${formData.profilePicture}`} 
-                    className='avater'
-                />
-            ) : (
-                <img src="/My LOGO.jpg" alt="Default Avatar" />
-            )}
-        </div>
+                <div className="avatar">
+                    {profilePicturePreview ? (
+                        <img
+                            src={typeof formData.profilePicture === 'string'
+                                ? `${IMAGE_BASE_URL}/profile_pictures/${formData.profilePicture}`
+                                : profilePicturePreview}
+                            className='avatar-img'
+                            alt="Profile"
+                        />
+                    ) : (
+                        <img src="/My_Logo.jpg" alt="Default Avatar" className="avatar-img" />
+                    )}
+                </div>
 
-
-                <h3>اعدادات الملف الشخصي</h3>
-                <button onClick={handleDeleteAccount} >حذف الحساب</button><br/>
+                <h3>إعدادات الملف الشخصي</h3>
+                <button onClick={handleDeleteAccount} className="delete-btn">حذف الحساب</button>
                 <button onClick={handleLogOut} className='logout-btn'>تسجيل الخروج</button>
+
                 <div className="toggle-switch-container">
-                    <label>Toggle Theme</label>
+                    <label>تغيير المظهر</label>
                     <div className={`toggle-switch ${theme}`}>
                         <input
                             type="checkbox"
@@ -222,15 +184,17 @@ const Profile = () => {
                             onChange={handleThemeToggle}
                         />
                         <label htmlFor="themeToggle" className="toggle-label"></label>
-                    </div>&nbsp;
-                    <Link to="/home">
-                        <button className="logout-btn" style={{backgroundColor:"green"}}>العودة الى الصفحة الرئيسية</button>
-                    </Link>
+                    </div>
                 </div>
+
+                <Link to="/home">
+                    <button className="btn-home" style={{backgroundColor:"#4CAF50", color: "white", padding: "10px", borderRadius: "5px", marginTop: "10px", width: "100%"}}>العودة للرئيسية</button>
+                </Link>
             </div>
+
             <div className="content">
                 <form className="profile-form" onSubmit={handleSubmit}>
-                    <h1>البيانات الاساسية</h1>
+                    <h1>البيانات الأساسية</h1>
                     <div className="form-group">
                         <label>الأسم الكامل</label>
                         <input
@@ -258,18 +222,18 @@ const Profile = () => {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            placeholder="Leave empty to keep current password"
+                            placeholder="اتركه فارغاً للحفاظ على كلمة المرور الحالية"
                         />
                     </div>
                     <div className="form-group">
                         <label>الدور</label>
-                        <input type="text" name="role" value={formData.role} onChange={handleChange} disabled />
+                        <input type="text" name="role" value={formData.role} disabled />
                     </div>
                     <div className="form-group">
-                        <label>تغير الصورة </label>
-                        <input type="file" onChange={handleFileChange} />
+                        <label>تغيير الصورة</label>
+                        <input type="file" onChange={handleFileChange} accept="image/*" />
                     </div>
-                    <button type="submit">حفظ التغيرات</button>
+                    <button type="submit" className="save-btn">حفظ التغييرات</button>
                 </form>
             </div>
         </div>

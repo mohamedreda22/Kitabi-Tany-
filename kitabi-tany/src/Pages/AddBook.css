@@ -1,97 +1,61 @@
-/* Container */
-*{
-    font-family: "IBM Plex Sans Arabic", sans-serif;
+.add-book-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
-body{
-    background-image: url("../assets/images/background.jpg");
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-attachment: fixed;
-    background-size: cover;
-    color: #333;
+
+.page-header-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.btn-back, .btn-profile {
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-back {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-profile {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-back:hover {
+    background-color: var(--background-color);
+}
+
+.btn-profile:hover {
+    background-color: var(--secondary-dark);
+    transform: translateY(-2px);
+}
+
+.auth-form-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+}
+
+.add-book-container .auth-form {
+    max-width: 600px;
+    width: 100%;
     margin: 0;
 }
 
-.add-book-container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: rgba(256, 256, 256, 0.5);
-    border: 1px solid #d4c8b4;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  .add-book-container .navbar{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    text-decoration: none;
-  }
-  
-  /* Form Header */
-  .add-book-container h2 {
-    font-size: 28px;
-    text-align: center;
-    color: #3d3d3d;
-    margin-bottom: 20px;
-  }
-  
-  /* Form Styling */
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  form label {
-    font-size: 16px;
-    color: #3d3d3d;
-    margin-bottom: 5px;
-  }
-  
-  form input[type="text"],
-  form input[type="number"],
-  form input[type="file"],
-  form textarea,
-  form select {
-    padding: 2.1px;
-    border: 1px solid #d4c8b4;
-    border-radius: 8px;
-    background-color: #faf8f4;
-    font-size: 16px;
-    margin-bottom: 15px;
-    color: #49443d;
-  }
-  
-  form textarea {
-    height: 80px;
-  }
-  
-  form input:focus,
-  form textarea:focus,
-  form select:focus {
-    outline: none;
-    border-color: #a6947a;
-    box-shadow: 0 0 4px rgba(166, 148, 122, 0.5);
-  }
-  
-  /* Submit Button */
-  form button {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background-color: #296ed8;
-    color: #ffffff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  form button:hover {
-    background-color: #215bb4;
-  }
-  
+.add-book-container textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+@media (max-width: 768px) {
+    .add-book-container {
+        margin: 20px auto;
+    }
+}

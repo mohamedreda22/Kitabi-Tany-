@@ -1,40 +1,59 @@
-/*
-  BookCard Component:
-  - Displays information about a book, including its cover image, title, rating, publication date, author, and category.
-  - Imports:
-      - `PropTypes` for prop type checking.
-      - CSS module for scoped styling.
-      - Placeholder image for cases where a cover image is not provided.
-  - Props:
-      - `title` (string, required): The title of the book.
-      - `rate` (number, required): The rating of the book.
-      - `publishDate` (string, required): The publication date of the book.
-      - `author` (string, required): The author's name.
-      - `category` (string, required): The category of the book.
-      - `imageCover` (string, optional): URL for the cover image; defaults to a placeholder image if not provided.
-  - The component is exported as default for use in other parts of the application.
-*/
+import React from 'react';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { IMAGE_BASE_URL } from '../../services/axiosInstance';
+import './BookCard.css';
 
-import PropTypes from 'prop-types'
-import styles from "./cssModule/BookCard.module.css"
-import imagePlaceholder from "./image/bookPlaceholder.png"
+const BookCard = ({ book, onAddToCart, showAddToCart = false }) => {
+    const { _id, title, author, price, condition, category, coverPhoto } = book;
 
-const BookCard = ({ title, rate, publishDate, author, category, imageCover = imagePlaceholder }) => {
+    const imageUrl = coverPhoto
+        ? `${IMAGE_BASE_URL}/cover_books/${coverPhoto}`
+        : "/My_Logo.jpg";
+
     return (
-        <div className={styles.card}>
-            <img src={imageCover} alt={title} className={styles.cover} />
-            {/* You could add more content here like title, rate, etc., as needed */}
+        <div className="book-card" dir="rtl">
+            <Link to={`/book/${_id}`} className="book-card-link">
+                <div className="book-card-image">
+                    <img src={imageUrl} alt={title} className="cover-img" />
+                </div>
+                <div className="book-card-info">
+                    <h3 className="book-title" title={title}>{title}</h3>
+                    <p className="book-author">المؤلف: {author}</p>
+                    <p className="book-category">التصنيف: {category}</p>
+                    <div className="book-details">
+                        <span className="book-condition">{condition}</span>
+                        <span className="book-price">{price} جنيه</span>
+                    </div>
+                </div>
+            </Link>
+            {showAddToCart && (
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onAddToCart(_id);
+                    }}
+                    className="add-to-cart-btn"
+                >
+                    أضف إلى العربة
+                </button>
+            )}
         </div>
-    )
-}
+    );
+};
 
 BookCard.propTypes = {
-    title: PropTypes.string.isRequired,
-    rate: PropTypes.number.isRequired,
-    publishDate: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    imageCover: PropTypes.string,
-}
+    book: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        author: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        condition: PropTypes.string,
+        category: PropTypes.string,
+        coverPhoto: PropTypes.string,
+    }).isRequired,
+    onAddToCart: PropTypes.func,
+    showAddToCart: PropTypes.bool,
+};
 
-export default BookCard
+export default BookCard;
