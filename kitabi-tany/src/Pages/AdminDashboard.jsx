@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, deleteUser, updateUser } from "../services/userService"; // Add updateUser
+import { getUsers, deleteUser, updateUser } from "../services/userService";
+import { IMAGE_BASE_URL } from "../services/axiosInstance";
 import Swal from "sweetalert2";
 import "../assets/css/AdminDashboard.css";
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ const AdminDashboard = () => {
             } catch (error) {
                 Swal.fire({
                     icon: "error",
-                    title: "Error Fetching Users",
+                    title: "خطأ في جلب المستخدمين",
                     text: error.message,
                 });
             } finally {
@@ -45,12 +46,12 @@ const AdminDashboard = () => {
             if (confirm.isConfirmed) {
                 await deleteUser(userId);
                 setUsers(users.filter((user) => user._id !== userId));
-                Swal.fire("Deleted!", "The user has been deleted.", "success");
+                Swal.fire("تم الحذف!", "تم حذف المستخدم بنجاح.", "success");
             }
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Error Deleting User",
+                title: "خطأ في حذف المستخدم",
                 text: error.message,
             });
         }
@@ -77,21 +78,21 @@ const AdminDashboard = () => {
                     user._id === editingUserId ? { ...user, ...editFormData } : user
                 )
             );
-            Swal.fire("Updated!", "The user has been updated.", "success");
+            Swal.fire("تم التحديث!", "تم تحديث بيانات المستخدم بنجاح.", "success");
             setEditingUserId(null);
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Error Updating User",
+                title: "خطأ في تحديث المستخدم",
                 text: error.message,
             });
         }
     };
 
     return (
-        <div className="admin-dashboard">
+        <div className="admin-dashboard" dir="rtl">
             {loading ? (
-                <p>Loading...</p>
+                <div className="spinner"></div>
             ) : (
                 <div className="dashboard-content">
                     <div className="header-btn">
@@ -114,7 +115,7 @@ const AdminDashboard = () => {
                                 <tr key={user._id}>
                                     <td>
                                         <img
-                                            src={`http://localhost:5000/profile_pictures/${user.profilePicture}`}
+                                            src={user.profilePicture ? `${IMAGE_BASE_URL}/profile_pictures/${user.profilePicture}` : "/My_Logo.jpg"}
                                             alt={user.username}
                                             className="user-photo"
                                         />
@@ -160,32 +161,32 @@ const AdminDashboard = () => {
                                     </td>
                                     <td>
                                         {editingUserId === user._id ? (
-                                            <>
+                                            <div className="admin-actions">
                                                 <button onClick={handleSave} className="save-btn">
-                                                    Save
-                                                </button>&nbsp;
+                                                    حفظ
+                                                </button>
                                                 <button
                                                     onClick={() => setEditingUserId(null)}
                                                     className="cancel-btn"
                                                 >
-                                                    Cancel
+                                                    إلغاء
                                                 </button>
-                                            </>
+                                            </div>
                                         ) : (
-                                            <>
+                                            <div className="admin-actions">
                                                 <button
                                                     className="edit-btn"
                                                     onClick={() => handleEdit(user)}
                                                 >
-                                                    Edit
+                                                    تعديل
                                                 </button>
                                                 <button
                                                     className="delete-btn"
                                                     onClick={() => handleDelete(user._id)}
                                                 >
-                                                    Delete
+                                                    حذف
                                                 </button>
-                                            </>
+                                            </div>
                                         )}
                                     </td>
                                 </tr>
