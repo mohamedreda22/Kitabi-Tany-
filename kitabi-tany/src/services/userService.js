@@ -15,7 +15,7 @@ export const registerUser = async (registrationData) => {
         for (const key in registrationData) {
             formData.append(key, registrationData[key]);
         }
-        const response = await axiosInstance.post('/users/register', formData, {
+        const response = await axiosInstance.post('/auth/register', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         return response.data;
@@ -47,7 +47,7 @@ export const updateUser = async (userId, updatedData) => {
 // Login User
 export const loginUser = async (userData) => {
     try {
-        const response = await axiosInstance.post('/users/login', userData);
+        const response = await axiosInstance.post('/auth/login', userData);
         return response.data;
     } catch (error) {
         handleError(error);
