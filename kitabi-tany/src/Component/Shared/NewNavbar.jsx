@@ -38,9 +38,9 @@ const NewNavbar = () => {
   };
 
   const navLinks = [
-    { name: "كلاسيكيات", path: "/home?category=تاريخية" },
     { name: "روايات", path: "/home?category=روايات" },
     { name: "كتب علمية", path: "/home?category=علمية" },
+    { name: "كلاسيكيات", path: "/home?category=كلاسيكيات" },
     { name: "كنوز نادرة", path: "/home?category=نادرة" },
   ];
 
