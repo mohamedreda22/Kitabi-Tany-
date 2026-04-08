@@ -4,7 +4,7 @@ const sendEmail = require("../util/sendEmail");
 const emailBody = require("../util/emailBody");
 
 exports.register = async (req, res) => {
-    const { username, email, password, role, profilePicture } = req.body;
+    const { username, email, password, role } = req.body;
     try {
         const existingUser = await userService.findUserByEmail(email);
         if (existingUser) {
@@ -12,12 +12,14 @@ exports.register = async (req, res) => {
         }
 
         const hashedPassword = await hashing.hashPassword(password);
+        const profilePicFilename = req.file ? req.file.filename : 'default-test-image.jpg';
+
         const newUser = await userService.createUser({
             username,
             email,
             password: hashedPassword,
             role,
-            profilePicture,
+            profilePicture: profilePicFilename,
         });
 
         res.status(201).json({ message: 'تم التسجيل بنجاح', user: newUser });

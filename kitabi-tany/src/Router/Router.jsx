@@ -15,6 +15,11 @@ const AdminDashboard = lazy(() => import("../Pages/AdminDashboard"));
 const SellerDashboard = lazy(() => import("../Pages/SellerDashboard"));
 const Orders = lazy(() => import("../Pages/Orders"));
 const AddBook = lazy(() => import("../Pages/AddBook"));
+const About = lazy(() => import("../Pages/Static/About"));
+const Curation = lazy(() => import("../Pages/Static/Curation"));
+const ConditionGuide = lazy(() => import("../Pages/Static/ConditionGuide"));
+const Shipping = lazy(() => import("../Pages/Static/Shipping"));
+const Privacy = lazy(() => import("../Pages/Static/Privacy"));
 
 const Router = () => {
     const AdminRoute = ({ children }) => {
@@ -46,6 +51,11 @@ const Router = () => {
                                     <Route path="/orders" element={<AdminRoute><Orders /></AdminRoute>} />
                                     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                                     <Route path="/add-book" element={<PrivateRoute><AddBook /></PrivateRoute>} />
+                                    <Route path="/about" element={<About />} />
+                                    <Route path="/curation" element={<Curation />} />
+                                    <Route path="/condition-guide" element={<ConditionGuide />} />
+                                    <Route path="/shipping" element={<Shipping />} />
+                                    <Route path="/privacy" element={<Privacy />} />
                                 </Routes>
                             </Layout>
                         }
