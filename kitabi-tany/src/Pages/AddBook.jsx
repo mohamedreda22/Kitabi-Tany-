@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { createBook } from '../services/bookService';
-import "./AddBook.css";
 
 const AddBook = () => {
   const navigate = useNavigate();
@@ -12,9 +11,9 @@ const AddBook = () => {
     author: "",
     description: "",
     price: "",
-    condition: "جديد",
+    condition: "Like New",
     coverPhoto: "",
-    category: "روايات",
+    category: "Fiction",
   });
 
   useEffect(() => {
@@ -24,6 +23,7 @@ const AddBook = () => {
           icon: 'warning',
           title: 'تنبيه',
           text: 'يرجى تسجيل الدخول أولاً',
+          confirmButtonColor: '#00333c',
       }).then(() => {
           navigate('/login');
       });
@@ -61,81 +61,129 @@ const AddBook = () => {
           timer: 1500,
           showConfirmButton: false
       });
-      navigate("/home");
+      navigate("/seller-dashboard");
     } catch (error) {
       Swal.fire('فشل', error.message || 'حدث خطأ أثناء إضافة الكتاب.', 'error');
     }
   };
 
   return (
-    <div className="add-book-container" dir="rtl">
-      <div className="page-header-actions">
-            <Link to="/home" className="btn-back">العودة</Link>
-            <Link to="/profile" className="btn-profile">الملف الشخصي</Link>
-      </div>
+    <div className="max-w-3xl mx-auto" dir="rtl">
+        <div className="bg-surface-container-low p-10 rounded-2xl shadow-[0_20px_40px_rgba(27,28,26,0.05)] border border-outline-variant/10">
+            <header className="flex justify-between items-center mb-10">
+                <h2 className="font-notoSerif text-3xl text-primary italic">إضافة كتاب جديد</h2>
+                <Link to="/seller-dashboard" className="text-xs font-bold uppercase tracking-widest text-outline hover:text-primary transition-colors">إلغاء</Link>
+            </header>
 
-      <div className="auth-form-container">
-        <form onSubmit={handleSubmit} className="auth-form">
-            <h2 className="auth-header">إضافة كتاب جديد</h2>
-            <input
-            type="text"
-            name="title"
-            placeholder="اسم الكتاب"
-            value={book.title}
-            onChange={handleChange}
-            required
-            />
-            <input
-            type="text"
-            name="author"
-            placeholder="اسم المؤلف"
-            value={book.author}
-            onChange={handleChange}
-            required
-            />
-            <textarea
-            name="description"
-            placeholder="وصف الكتاب"
-            value={book.description}
-            onChange={handleChange}
-            />
-            <input
-            type="number"
-            name="price"
-            placeholder="السعر"
-            value={book.price}
-            onChange={handleChange}
-            required
-            />
-            <select name="condition" value={book.condition} onChange={handleChange}>
-            <option value="جديد">جديد</option>
-            <option value="مثل الجديد">مثل الجديد</option>
-            <option value="جيد">جيد</option>
-            <option value="مقبول">مقبول</option>
-            </select>
-            <input
-            type="file"
-            name="coverPhoto"
-            onChange={handleFileChange}
-            accept="image/*"
-            required
-            />
-            <select name="category" value={book.category} onChange={handleChange}>
-            <option value="روايات">روايات</option>
-            <option value="علمية">علمية</option>
-            <option value="تاريخية">تاريخية</option>
-            <option value="سيرة ذاتية">سيرة ذاتية</option>
-            <option value="رومانسية">رومانسية</option>
-            <option value="غموض">غموض</option>
-            <option value="خيال">خيال</option>
-            <option value="أطفال">أطفال</option>
-            <option value="غير روائية">غير روائية</option>
-            <option value="مغامرات">مغامرات</option>
-            <option value="علم النفس">علم النفس</option>
-            </select>
-            <button type="submit" className="auth-btn">إضافة الكتاب</button>
-        </form>
-      </div>
+            <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">اسم الكتاب</label>
+                        <input
+                            type="text"
+                            name="title"
+                            className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope"
+                            value={book.title}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">اسم المؤلف</label>
+                        <input
+                            type="text"
+                            name="author"
+                            className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope"
+                            value={book.author}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">وصف الكتاب</label>
+                    <textarea
+                        name="description"
+                        className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope min-h-[120px]"
+                        value={book.description}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">السعر (ج.م)</label>
+                        <input
+                            type="number"
+                            name="price"
+                            className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope"
+                            value={book.price}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">الحالة</label>
+                        <select
+                            name="condition"
+                            className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope appearance-none cursor-pointer"
+                            value={book.condition}
+                            onChange={handleChange}
+                        >
+                            <option value="Like New">مثل الجديد</option>
+                            <option value="Good">جيد</option>
+                            <option value="Fair">مقبول</option>
+                        </select>
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">التصنيف</label>
+                        <select
+                            name="category"
+                            className="w-full px-4 py-3 bg-surface-container-highest border-none rounded-xl focus:ring-2 focus:ring-primary/20 text-on-surface font-manrope appearance-none cursor-pointer"
+                            value={book.category}
+                            onChange={handleChange}
+                        >
+                            <option value="Fiction">روايات</option>
+                            <option value="Academic">علمية</option>
+                            <option value="Classic">تاريخية</option>
+                            <option value="Rare Finds">نادرة</option>
+                            <option value="Biography">سيرة ذاتية</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="space-y-2">
+                    <label className="text-xs font-bold uppercase tracking-widest text-outline mr-2">غلاف الكتاب</label>
+                    <div className="flex items-center gap-6 p-6 bg-surface-container-highest rounded-xl border-2 border-dashed border-outline-variant/30">
+                        <div className="flex-1">
+                            <input
+                                type="file"
+                                name="coverPhoto"
+                                onChange={handleFileChange}
+                                accept="image/*"
+                                className="block w-full text-sm text-outline file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-primary file:text-on-primary hover:file:opacity-90 cursor-pointer"
+                                required
+                            />
+                        </div>
+                        {book.coverPhoto && book.coverPhoto instanceof File && (
+                            <img
+                                src={URL.createObjectURL(book.coverPhoto)}
+                                alt="preview"
+                                className="w-16 h-24 rounded object-cover shadow-lg"
+                            />
+                        )}
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    className="w-full bg-primary text-on-primary py-5 rounded-xl font-bold hover:opacity-90 transition-opacity mt-4 shadow-xl shadow-primary/10"
+                >
+                    عرض الكتاب للبيع
+                </button>
+            </form>
+        </div>
     </div>
   );
 };

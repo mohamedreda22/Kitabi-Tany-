@@ -1,15 +1,15 @@
 import React from 'react';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import NewNavbar from './NewNavbar';
+import NewFooter from './NewFooter';
 
 const Layout = ({ children }) => {
     return (
-        <div className="layout-container" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <Navbar />
-            <main style={{ flex: '1', padding: '40px 20px' }}>
+        <div className="bg-surface min-h-screen flex flex-col font-manrope">
+            <NewNavbar />
+            <main className="flex-grow pt-32 pb-20">
                 {children}
             </main>
-            <Footer />
+            <NewFooter />
         </div>
     );
 };
