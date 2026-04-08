@@ -267,7 +267,72 @@ const Home = () => {
                 <span className="font-manrope font-bold text-lg">180 ج.م</span>
               </div>
             </div>
-            {/* More book cards similarly... */}
+            {/* Book Card 3 */}
+            <div className="min-w-[280px] snap-start group text-right">
+              <div className="aspect-[2/3] bg-surface-container rounded-xl overflow-hidden mb-4 relative shadow-sm hover:shadow-xl transition-shadow duration-300">
+                <img
+                  className="w-full h-full object-cover"
+                  alt="scientific textbook cover with abstract geometric patterns and clean modern design"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6PYCid6UMuShz8_0CBxFZbqeiWwEfec118mhqx8Qwb_6Osp0BWLoxjaKkaZVyjD-0t4KdH-ZxJNvdThnQ-huHmvdnCVoZgJ7n0ubmfgmkj3IGCQgJxs6duloIv8CaqcsBuBS1vjrm9aa3qEB59zgzsDVJvcUB99l_jWhvflpzIhfNTF6lU5VNQf4CuuEPt5CQqlkO8wiQg5kzWYMb43TF0svLn7Wjbv9ser1KHHt3xPo4SMs92NVs1aUYMfsxybxOdoodY-ViT4bm"
+                />
+              </div>
+              <h4 className="font-notoSerif text-lg text-primary group-hover:text-surface-tint transition-colors">
+                Astrophysics for People in a Hurry
+              </h4>
+              <p className="font-manrope text-sm text-on-surface-variant mb-2">
+                Neil deGrasse Tyson
+              </p>
+              <div className="flex items-center gap-3 justify-end">
+                <span className="font-manrope text-sm text-outline line-through">
+                  320 ج.م
+                </span>
+                <span className="font-manrope font-bold text-lg">95 ج.م</span>
+              </div>
+            </div>
+            {/* Book Card 4 */}
+            <div className="min-w-[280px] snap-start group text-right">
+              <div className="aspect-[2/3] bg-surface-container rounded-xl overflow-hidden mb-4 relative shadow-sm hover:shadow-xl transition-shadow duration-300">
+                <img
+                  className="w-full h-full object-cover"
+                  alt="thick fantasy novel cover featuring an epic sword and dragon emblem with high-contrast lighting"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBI2lKrqOPIctwldncnojo7PCkd1sMj0vN5cfkX-yD6QcwJ-gFHVZEwJVKJXgySIMhz-LYjVNM2j_nNB2szCEo8JDljuzWG1rOc6EbPjbt9MRCOkTxY3dXStbxtJhhRmJMQDLv5cXzZVYLIzIbJXgbEok0seC9X1kDBJZwmDC7ogYdPvHNvuFuZJOXEsnVASefcgsnUsdTUDnC5uemCk8sW3bwYAFXGJz0_rTWppE5xkl-RWs2PcxC7AN4kV84JAojuHxWbbHj01iv2"
+                />
+              </div>
+              <h4 className="font-notoSerif text-lg text-primary group-hover:text-surface-tint transition-colors">
+                اسم الرياح
+              </h4>
+              <p className="font-manrope text-sm text-on-surface-variant mb-2">
+                باتريك روثفوس
+              </p>
+              <div className="flex items-center gap-3 justify-end">
+                <span className="font-manrope text-sm text-outline line-through">
+                  700 ج.م
+                </span>
+                <span className="font-manrope font-bold text-lg">210 ج.م</span>
+              </div>
+            </div>
+            {/* Book Card 5 */}
+            <div className="min-w-[280px] snap-start group text-right">
+              <div className="aspect-[2/3] bg-surface-container rounded-xl overflow-hidden mb-4 relative shadow-sm hover:shadow-xl transition-shadow duration-300">
+                <img
+                  className="w-full h-full object-cover"
+                  alt="biography book cover featuring a portrait of a notable historical figure in black and white"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIdiMdSE-ZSElKRrvJJxNDV05KG7lV85hBc53MC_ttXCwEsOnT7RcEhD4hme5mnusnVupqmN6eWjDFJqVdoaQMxUu7lln8m5QACuhlWBFxV0x_oIEfxfgKjiEN_-t7jUrQofdTIdfw5mHinl0lVvJAAaZJo9wGQigsyDHhA-HCGSO0zqbc0D_TcWt7QqijsxHL70i7RDQk4-Qb_wL0W0ME3Hb4-O2rM-2aEfGg5hybKrOfOWhfT3v-9sfgF9dkqE2pJ23lIjwdcQvd"
+                />
+              </div>
+              <h4 className="font-notoSerif text-lg text-primary group-hover:text-surface-tint transition-colors">
+                أرض الميعاد
+              </h4>
+              <p className="font-manrope text-sm text-on-surface-variant mb-2">
+                باراك أوباما
+              </p>
+              <div className="flex items-center gap-3 justify-end">
+                <span className="font-manrope text-sm text-outline line-through">
+                  850 ج.م
+                </span>
+                <span className="font-manrope font-bold text-lg">250 ج.م</span>
+              </div>
+            </div>
           </div>
         </section>
 
