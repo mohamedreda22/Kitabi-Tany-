@@ -14,41 +14,41 @@ const NewNavbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-[#faf9f5]/80 dark:bg-[#1b1c1a]/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(27,28,26,0.05)]">
+    <nav className="fixed top-0 w-full z-50 bg-[#faf9f5]/80 dark:bg-[#1b1c1a]/80 backdrop-blur-xl shadow-[0_20px_40px_rgba(27,28,26,0.05)]" dir="rtl">
       <div className="flex justify-between items-center px-8 h-20 max-w-screen-2xl mx-auto">
         <Link
           to={token ? "/home" : "/"}
           className="text-2xl font-notoSerif italic text-[#00333c] dark:text-[#ffffff]"
         >
-          Kitabi Tany
+          كتابي تاني
         </Link>
-        <div className="hidden md:flex space-x-8 items-center font-notoSerif tracking-tight font-light">
+        <div className="hidden md:flex space-x-8 items-center font-notoSerif tracking-tight font-light flex-row-reverse">
           <Link
-            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300"
-            to="/home?category=Classic"
+            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300 ml-8"
+            to="/home?category=تاريخية"
           >
-            Classics
+            كلاسيكيات
+          </Link>
+          <Link
+            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300 ml-8"
+            to="/home?category=روايات"
+          >
+            روايات
+          </Link>
+          <Link
+            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300 ml-8"
+            to="/home?category=علمية"
+          >
+            كتب علمية
           </Link>
           <Link
             className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300"
-            to="/home?category=Fiction"
+            to="/home?category=نادرة"
           >
-            Fiction
-          </Link>
-          <Link
-            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300"
-            to="/home?category=Academic"
-          >
-            Academic
-          </Link>
-          <Link
-            className="text-[#5c5e58] dark:text-[#91928d] hover:text-[#00333c] dark:hover:text-white transition-colors duration-300"
-            to="/home?category=Rare Finds"
-          >
-            Rare Finds
+            كنوز نادرة
           </Link>
         </div>
-        <div className="flex items-center space-x-6 text-[#004B57] dark:text-[#bae8f0]">
+        <div className="flex items-center space-x-6 space-x-reverse text-[#004B57] dark:text-[#bae8f0]">
           {token ? (
             <>
               {userRole === "buyer" && (
@@ -79,7 +79,7 @@ const NewNavbar = () => {
                 onClick={handleLogout}
                 className="text-xs font-manrope uppercase tracking-widest hover:underline"
               >
-                Logout
+                خروج
               </button>
             </>
           ) : (

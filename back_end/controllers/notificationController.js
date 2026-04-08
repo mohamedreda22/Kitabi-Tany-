@@ -1,21 +1,16 @@
-const Notification = require('../models/Notification.js');
- 
+const notificationService = require('../services/notificationService');
+
 const createNotification = async (userId, message) => {
     try {
-        const notification = new Notification({
-            user: userId,
-            message
-        });
-        await notification.save();
+        await notificationService.createNotification(userId, message);
     } catch (error) {
         console.error("Error creating notification:", error);
     }
 };
 
- 
 const getUserNotifications = async (req, res) => {
     try {
-        const notifications = await Notification.find({ user: req.userId }).sort({ createdAt: -1 });
+        const notifications = await notificationService.getUserNotifications(req.userId);
         res.status(200).json(notifications);
     } catch (error) {
         console.error("Error getting notifications:", error);
