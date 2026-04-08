@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Cookies from "js-cookie";
 import { getBooksBySeller, deleteBook } from "../services/bookService";
 import { IMAGE_BASE_URL } from "../services/axiosInstance";
 import Swal from "sweetalert2";
