@@ -14,10 +14,12 @@ const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState(null);
-  const [priceRange, setPriceRange] = useState(2500);
+  const [priceRange, setPriceRange] = useState(5000);
   const [selectedConditions, setSelectedConditions] = useState([]);
   const userRole = Cookies.get("userRole");
   const location = useLocation();
+
+  const conditions = ["جديد", "مثل الجديد", "جيد", "مقبول"];
 
   useEffect(() => {
     fetchBooks();
@@ -195,17 +197,28 @@ const HomePage = () => {
         </div>
       )}
 
-      <main className="pt-32 pb-20 px-8 max-w-screen-2xl mx-auto flex gap-12">
+      <main className="pt-32 pb-20 px-8 max-w-screen-2xl mx-auto flex gap-12" dir="rtl">
         {/* Sidebar Filters */}
         <aside className="w-64 flex-shrink-0 hidden lg:block">
           <div className="sticky top-32 space-y-10">
             <div className="space-y-4">
-              <h3 className="font-notoSerif text-xl font-bold text-primary">Filters</h3>
+              <h3 className="font-notoSerif text-xl font-bold text-primary">تصفية النتائج</h3>
               <div className="h-px bg-outline-variant/20"></div>
+            </div>
+            {/* Search Input */}
+            <div className="space-y-4">
+               <label className="text-sm font-semibold uppercase tracking-widest text-outline">البحث</label>
+               <input
+                 type="text"
+                 className="w-full bg-surface-container-high rounded-xl border-none focus:ring-2 focus:ring-primary-container text-on-surface placeholder-on-surface-variant/60 font-manrope text-sm p-3"
+                 placeholder="اسم الكتاب أو المؤلف..."
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+               />
             </div>
             {/* Price Range */}
             <div className="space-y-4">
-              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Price Range</label>
+              <label className="text-sm font-semibold uppercase tracking-widest text-outline">نطاق السعر</label>
               <div className="space-y-2">
                 <input
                   className="w-full accent-primary h-1.5 bg-surface-container-high rounded-full appearance-none cursor-pointer"
@@ -216,17 +229,17 @@ const HomePage = () => {
                   value={priceRange}
                   onChange={(e) => setPriceRange(parseInt(e.target.value))}
                 />
-                <div className="flex justify-between text-xs font-medium text-on-surface-variant">
-                  <span>0 EGP</span>
-                  <span>{priceRange.toLocaleString()} EGP</span>
+                <div className="flex justify-between text-xs font-medium text-on-surface-variant" dir="ltr">
+                  <span>0 ج.م</span>
+                  <span>{priceRange.toLocaleString()} ج.م</span>
                 </div>
               </div>
             </div>
             {/* Condition */}
             <div className="space-y-4">
-              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Condition</label>
+              <label className="text-sm font-semibold uppercase tracking-widest text-outline">الحالة</label>
               <div className="flex flex-col gap-3">
-                {['Like New', 'Good', 'Fair'].map((cond) => (
+                {conditions.map((cond) => (
                   <label key={cond} className="flex items-center gap-3 cursor-pointer group">
                     <input
                       className="rounded-sm border-outline-variant text-primary focus:ring-primary h-4 w-4"
@@ -239,16 +252,6 @@ const HomePage = () => {
                 ))}
               </div>
             </div>
-            {/* Location */}
-            <div className="space-y-4">
-              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Location</label>
-              <select className="w-full bg-surface-container-low border-none text-sm rounded-lg focus:ring-primary/20 p-3">
-                <option>All Egypt</option>
-                <option>Cairo</option>
-                <option>Giza</option>
-                <option>Alexandria</option>
-              </select>
-            </div>
           </div>
         </aside>
 
@@ -257,14 +260,14 @@ const HomePage = () => {
           {/* Header & Sorting */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
-              <h1 className="font-notoSerif text-4xl md:text-5xl font-light text-primary leading-tight">The Library</h1>
-              <p className="text-on-surface-variant font-manrope mt-2">Discover {filteredBooks.length} curated literary gems</p>
+              <h1 className="font-notoSerif text-4xl md:text-5xl font-light text-primary leading-tight">المكتبة</h1>
+              <p className="text-on-surface-variant font-manrope mt-2">اكتشف {filteredBooks.length} من الكنوز الأدبية المختارة</p>
             </div>
             <div className="flex items-center gap-4">
-              <span className="text-xs uppercase tracking-widest text-outline font-semibold">Sort By:</span>
+              <span className="text-xs uppercase tracking-widest text-outline font-semibold">ترتيب حسب:</span>
               <div className="relative group">
                 <button className="flex items-center gap-2 text-sm font-medium border-b-2 border-transparent hover:border-primary pb-1 transition-all">
-                  Newest Arrivals
+                  وصل حديثاً
                   <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
                 </button>
               </div>
@@ -281,11 +284,11 @@ const HomePage = () => {
                       <img
                         className="w-full h-full object-cover"
                         alt={book.title}
-                        src={book.coverPhoto ? `${IMAGE_BASE_URL}/cover_books/${book.coverPhoto}` : "https://lh3.googleusercontent.com/aida-public/AB6AXuA6ryO6V_waZqPmRMFHIYZ-aYwn7K38PfDWUvMi3WJkLKT9RJWT9qtTpGXFgTuwDw1qJiSLkIBM-_znw5KGnrPeC5-zAQxE30sh2aulpNff7V1eL3KSdRLhgCAqEe45BwGe_mfPN0JJzEzueHy3v6XgEXep104e4A5czb-UmQ8l6OJHRpHd3BIjeXx03duxY0coxTNwLmL2k5DjnxbmRQ91b099CwOLhXsBYNbG8KpgJkmEeWNq1_ZIgWdxdrwSDfoLTrSqSn0IYkBS"}
+                        src={book.coverPhoto ? `${IMAGE_BASE_URL}/cover_books/${book.coverPhoto}` : "https://via.placeholder.com/300x400?text=No+Cover"}
                       />
-                      <div className="absolute top-4 left-4">
+                      <div className="absolute top-4 right-4">
                         <span className="bg-secondary-container/90 backdrop-blur-md text-on-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">
-                          {book.condition || 'Good'}
+                          {book.condition}
                         </span>
                       </div>
                       <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
@@ -298,7 +301,7 @@ const HomePage = () => {
                           {book.title}
                         </h2>
                       </Link>
-                      <span className="font-manrope font-bold text-primary whitespace-nowrap">{book.price} EGP</span>
+                      <span className="font-manrope font-bold text-primary whitespace-nowrap">{book.price} ج.م</span>
                     </div>
                     <p className="text-sm text-on-surface-variant">{book.author}</p>
                     <div className="flex items-center justify-between pt-2">
@@ -328,15 +331,15 @@ const HomePage = () => {
           ) : (
             <div className="text-center py-20">
               <span className="material-symbols-outlined text-6xl text-outline-variant mb-4">search_off</span>
-              <h3 className="text-xl font-notoSerif text-primary mb-2">No books found</h3>
-              <p className="text-on-surface-variant">Try adjusting your filters or search terms.</p>
+              <h3 className="text-xl font-notoSerif text-primary mb-2">لا يوجد كتب</h3>
+              <p className="text-on-surface-variant">حاول تغيير خيارات البحث أو التصفية.</p>
             </div>
           )}
 
           {/* Pagination */}
           <nav className="mt-24 flex items-center justify-center gap-4">
             <button className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary transition-all">
-              <span className="material-symbols-outlined">chevron_left</span>
+              <span className="material-symbols-outlined">chevron_right</span>
             </button>
             <div className="flex gap-2">
               <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-md">1</button>
@@ -344,7 +347,7 @@ const HomePage = () => {
               <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">3</button>
             </div>
             <button className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary transition-all">
-              <span className="material-symbols-outlined">chevron_right</span>
+              <span className="material-symbols-outlined">chevron_left</span>
             </button>
           </nav>
         </section>

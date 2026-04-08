@@ -1,28 +1,47 @@
-const User=require('../models/User')
+const User = require('../models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
-class userService {
+const findUserByEmail = async (email) => {
+    return await User.findOne({ email });
+};
 
-static async findUser(parama,value,...arg)
-{
-    return await User.findOne({[parama]: value}).populate(...arg).exec();
-}
+const findUserById = async (id) => {
+    return await User.findById(id);
+};
 
-static async findByIdAndUpdate(userId,parama,value)
-{
-    const user =await User.findOne( {_id: userId} ) ; 
-    user[parama]=value.toString();
-    return await user.save()
-    
-}
-static async addToSchedule(userId,time,date,type)
-{try{
-    await Schadule.create({time,date,type,user:userId});
-}catch(err){
-    console.log(err)
-}
+const createUser = async (userData) => {
+    const user = new User(userData);
+    return await user.save();
+};
 
-}
+const updateUserById = async (id, updateData) => {
+    return await User.findByIdAndUpdate(id, updateData, { new: true });
+};
 
-}
+const findAllUsers = async () => {
+    return await User.find();
+};
 
-module.exports = userService;
+const comparePassword = async (inputPassword, userPassword) => {
+    return await bcrypt.compare(inputPassword, userPassword);
+};
+
+const generateToken = (payload, secret, expiresIn = '1d') => {
+    return jwt.sign(payload, secret, { expiresIn });
+};
+
+const verifyToken = (token, secret) => {
+    return jwt.verify(token, secret);
+};
+
+module.exports = {
+    findUserByEmail,
+    findUserById,
+    createUser,
+    updateUserById,
+    findAllUsers,
+    comparePassword,
+    generateToken,
+    verifyToken,
+};

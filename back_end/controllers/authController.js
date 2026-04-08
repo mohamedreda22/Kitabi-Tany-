@@ -1,33 +1,25 @@
-const User = require('../models/User');
-const authService = require('../services/authService')
-const hashing = require('../middleware/hashing')
-const { hashPassword } = require('../middleware/hashing');
-const sendEmail = require("../util/sendEmail")
-const emailBody = require("../util/emailBody")
-const jwt = require('jsonwebtoken');
+const userService = require('../services/userService');
+const hashing = require('../middleware/hashing');
+const sendEmail = require("../util/sendEmail");
+const emailBody = require("../util/emailBody");
 
 exports.register = async (req, res) => {
-    const { username, email, password, role, profilePicture  } = req.body;
-
+    const { username, email, password, role, profilePicture } = req.body;
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await userService.findUserByEmail(email);
         if (existingUser) {
             return res.status(400).json({ message: 'البريد الإلكتروني مستخدم بالفعل' });
         }
 
-        // Hash the password before saving it
-        const hashedPassword = await hashPassword(password);
-
-        const newUser = new User({
+        const hashedPassword = await hashing.hashPassword(password);
+        const newUser = await userService.createUser({
             username,
             email,
-            password: hashedPassword, // Save hashed password
+            password: hashedPassword,
             role,
-            // profilePicture: req.file ? req.file.filename : null,
             profilePicture,
         });
 
-        await newUser.save();
         res.status(201).json({ message: 'تم التسجيل بنجاح', user: newUser });
     } catch (error) {
         console.error("Registration Error:", error);
@@ -35,19 +27,26 @@ exports.register = async (req, res) => {
     }
 };
 
-
 exports.login = async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await User.findOne({ email });
-        if (!user || !(await authService.comparePassword(password, user.password))) {
-            return res.status(401).json({ message: 'Invalid credentials' });
+        const user = await userService.findUserByEmail(email);
+        if (!user || !(await userService.comparePassword(password, user.password))) {
+            return res.status(401).json({ message: 'بيانات الاعتماد غير صحيحة' });
         }
-        const token = await authService.generateToken({ userId: user._id });
-        const refreshToken = await authService.generateRefreshToken({ userId: user._id });
-        const userRole = user.role;
-        res.status(200).json({ token, refreshToken, userRole });
-        res.status(200).json({ token, refreshToken });
+
+        const token = userService.generateToken({ id: user._id }, process.env.SECRET_KEY);
+        const refreshToken = userService.generateToken({ id: user._id }, process.env.REFRESH_SECRET_KEY, '1y');
+
+        await userService.updateUserById(user._id, { refreshToken });
+
+        res.status(200).json({
+            token,
+            refreshToken,
+            userRole: user.role,
+            userId: user._id,
+            user: { username: user.username, profilePicture: user.profilePicture, role: user.role }
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -55,69 +54,57 @@ exports.login = async (req, res) => {
 
 exports.forgetPassword = async (req, res) => {
     const { email } = req.body;
-    const user = await User.findOne({ email }).exec();
-
-    if (!user) {
-        return res.status(404).json({ message: "Sorry, no account was found with this email address." });
-    }
-
-    const token = await jwt.sign({ userId: user._id }, process.env.PASSWORD_RESET_SECRET_KEY, { expiresIn: "5m" });
-
-    const emailOptions = {
-        mailTo: user.email,
-        subject: "أعادة تعين كلمة السر",
-        emailBody: emailBody(token, user.username)
-    };
-
     try {
+        const user = await userService.findUserByEmail(email);
+        if (!user) {
+            return res.status(404).json({ message: "عذراً، لم يتم العثور على حساب بهذا البريد الإلكتروني." });
+        }
+
+        const token = userService.generateToken({ userId: user._id }, process.env.PASSWORD_RESET_SECRET_KEY, '5m');
+        const emailOptions = {
+            mailTo: user.email,
+            subject: "إعادة تعيين كلمة السر",
+            emailBody: emailBody(token, user.username)
+        };
+
         await sendEmail(emailOptions);
-        res.status(200).json({ message: "An email with password reset instructions has been sent. Please check your email." });
+        res.status(200).json({ message: "تم إرسال بريد إلكتروني يحتوي على تعليمات إعادة تعيين كلمة المرور." });
     } catch (error) {
-        res.status(500).json({ message: "An error occurred while sending the email. Please try again later." });
+        res.status(500).json({ message: "حدث خطأ أثناء إرسال البريد الإلكتروني." });
     }
 };
-
 
 exports.resetPassword = async (req, res) => {
     const { password, passwordConfirmation, token } = req.body;
 
     if (password !== passwordConfirmation) {
-        return res.status(400).json({ message: "Passwords do not match" });
+        return res.status(400).json({ message: "كلمات المرور غير متطابقة" });
     }
 
     try {
-        const decoded = await jwt.verify(token, process.env.PASSWORD_RESET_SECRET_KEY);
-        const user = await User.findById(decoded.userId).exec();
+        const decoded = userService.verifyToken(token, process.env.PASSWORD_RESET_SECRET_KEY);
+        const user = await userService.findUserById(decoded.userId);
 
         if (!user) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "المستخدم غير موجود" });
         }
 
         const tokenCreatedAt = new Date(decoded.iat * 1000);
-        const isTokenUsed = user.password_updatedAt && tokenCreatedAt < user.password_updatedAt;
-
-        if (isTokenUsed) {
-            return res.status(400).json({ message: "This token has already been used" });
+        if (user.password_updatedAt && tokenCreatedAt < user.password_updatedAt) {
+            return res.status(400).json({ message: "انتهت صلاحية هذا الرابط" });
         }
 
         const hashedPassword = await hashing.hashPassword(password);
+        await userService.updateUserById(decoded.userId, { password: hashedPassword, password_updatedAt: Date.now() });
 
-        await User.updateOne(
-            { _id: decoded.userId },
-            { password: hashedPassword, password_updatedAt: Date.now() }
-        );
-
-        return res.status(200).json({ message: "Password successfully reset" });
-
+        return res.status(200).json({ message: "تم إعادة تعيين كلمة المرور بنجاح" });
     } catch (error) {
-
         if (error.name === "JsonWebTokenError") {
-            return res.status(400).json({ message: "Invalid token" });
+            return res.status(400).json({ message: "رابط غير صالح" });
         } else if (error.name === "TokenExpiredError") {
-            return res.status(400).json({ message: "Token has expired" });
+            return res.status(400).json({ message: "انتهت صلاحية الرابط" });
         } else {
-            return res.status(500).json({ message: "An unexpected error occurred" });
+            return res.status(500).json({ message: "حدث خطأ غير متوقع" });
         }
     }
 };
-

@@ -11,10 +11,17 @@ const AddBook = () => {
     author: "",
     description: "",
     price: "",
-    condition: "Like New",
+    condition: "مثل الجديد",
     coverPhoto: "",
-    category: "Fiction",
+    category: "روايات",
   });
+
+  const categories = [
+    "روايات", "علمية", "تاريخية", "سيرة ذاتية", "رومانسية",
+    "غموض", "خيال", "أطفال", "غير روائية", "مغامرات", "علم النفس"
+  ];
+
+  const conditions = ["جديد", "مثل الجديد", "جيد", "مقبول"];
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -131,9 +138,7 @@ const AddBook = () => {
                             value={book.condition}
                             onChange={handleChange}
                         >
-                            <option value="Like New">مثل الجديد</option>
-                            <option value="Good">جيد</option>
-                            <option value="Fair">مقبول</option>
+                            {conditions.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                     <div className="space-y-2">
@@ -144,11 +149,7 @@ const AddBook = () => {
                             value={book.category}
                             onChange={handleChange}
                         >
-                            <option value="Fiction">روايات</option>
-                            <option value="Academic">علمية</option>
-                            <option value="Classic">تاريخية</option>
-                            <option value="Rare Finds">نادرة</option>
-                            <option value="Biography">سيرة ذاتية</option>
+                            {categories.map(c => <option key={c} value={c}>{c}</option>)}
                         </select>
                     </div>
                 </div>
