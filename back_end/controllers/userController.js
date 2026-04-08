@@ -2,33 +2,6 @@ const userService = require('../services/userService');
 const { hashPassword } = require('../middleware/hashing');
 const mongoose = require('mongoose');
 
-const register = async (req, res) => {
-    const { username, email, password, role } = req.body;
-    if (!username || !email || !password || !role) {
-        return res.status(400).json({ message: 'All fields are required' });
-    }
-    try {
-        const existingUser = await userService.findUserByEmail(email);
-        if (existingUser) return res.status(400).json({ message: 'User already exists' });
-
-        const hashedPassword = await hashPassword(password);
-        const profilePicFilename = req.file ? req.file.filename : 'default-test-image.jpg';
-
-        await userService.createUser({
-            username,
-            email,
-            password: hashedPassword,
-            role,
-            profilePicture: profilePicFilename,
-        });
-
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (error) {
-        console.error("Registration Error:", error);
-        res.status(500).json({ message: 'Server error during registration' });
-    }
-};
-
 const getUserById = async (req, res) => {
     const userId = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(userId)) return res.status(400).json({ message: 'Invalid User ID' });
@@ -89,7 +62,6 @@ const logout = async (req, res) => {
 };
 
 module.exports = {
-    register,
     getUserById,
     updateUser,
     deleteUser,

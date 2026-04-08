@@ -39,19 +39,25 @@ const NewFooter = () => {
             <nav className="flex flex-col space-y-2">
               <Link
                 className="text-[#777972] dark:text-[#91928d] hover:underline decoration-[#004B57]"
-                to="#"
+                to="/about"
+              >
+                عن كتابي تاني
+              </Link>
+              <Link
+                className="text-[#777972] dark:text-[#91928d] hover:underline decoration-[#004B57]"
+                to="/curation"
               >
                 عن اختياراتنا
               </Link>
               <Link
                 className="text-[#777972] dark:text-[#91928d] hover:underline decoration-[#004B57]"
-                to="#"
+                to="/condition-guide"
               >
                 دليل حالة الكتاب
               </Link>
               <Link
                 className="text-[#777972] dark:text-[#91928d] hover:underline decoration-[#004B57]"
-                to="#"
+                to="/shipping"
               >
                 الشحن
               </Link>
@@ -62,7 +68,7 @@ const NewFooter = () => {
             <nav className="flex flex-col space-y-2">
               <Link
                 className="text-[#777972] dark:text-[#91928d] hover:underline decoration-[#004B57]"
-                to="#"
+                to="/privacy"
               >
                 الخصوصية
               </Link>
