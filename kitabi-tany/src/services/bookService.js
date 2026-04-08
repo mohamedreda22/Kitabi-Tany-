@@ -15,6 +15,16 @@ export const getRecentBooks = async () => {
     }
 };
 
+export const getBooksBySeller = async () => {
+    try {
+        const userId = Cookies.get("userId");
+        const response = await getAllBooks();
+        return response.filter(book => book.seller === userId || (book.seller?._id === userId));
+    } catch (error) {
+        handleError(error);
+    }
+};
+
 export const getAllBooks = async () => {
     try {
         const response = await axiosInstance.get('/books');

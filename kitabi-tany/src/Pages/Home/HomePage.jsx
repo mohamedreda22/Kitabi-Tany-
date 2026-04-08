@@ -1,26 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
 import { getAllBooks } from "../../services/bookService";
 import { getCart, addToCart, removeFromCart } from "../../services/cartService";
+import { IMAGE_BASE_URL } from "../../services/axiosInstance";
 import { placeOrder } from "../../services/ordersService";
-import BookCard from "../../Component/Shared/BookCard";
-import Swal from 'sweetalert2';
-import "./HomePage.css";
+import Swal from "sweetalert2";
+import NewNavbar from "../../Component/Shared/NewNavbar";
+import NewFooter from "../../Component/Shared/NewFooter";
 
 const HomePage = () => {
   const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [cartOpen, setCartOpen] = useState(false);
   const [cart, setCart] = useState(null);
+  const [priceRange, setPriceRange] = useState(2500);
+  const [selectedConditions, setSelectedConditions] = useState([]);
   const userRole = Cookies.get("userRole");
+  const location = useLocation();
 
   useEffect(() => {
     fetchBooks();
     if (userRole === "buyer") {
       fetchCart();
     }
-  }, [userRole]);
+  }, [userRole, location.search]);
 
   const fetchBooks = async () => {
     try {
@@ -72,10 +76,26 @@ const HomePage = () => {
 
   const toggleCart = () => setCartOpen(!cartOpen);
 
-  const filteredBooks = books.filter((book) =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleConditionChange = (condition) => {
+    if (selectedConditions.includes(condition)) {
+      setSelectedConditions(selectedConditions.filter(c => c !== condition));
+    } else {
+      setSelectedConditions([...selectedConditions, condition]);
+    }
+  };
+
+  const filteredBooks = books.filter((book) => {
+    const queryParams = new URLSearchParams(location.search);
+    const categoryFilter = queryParams.get("category");
+
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPrice = book.price <= priceRange;
+    const matchesCondition = selectedConditions.length === 0 || selectedConditions.includes(book.condition);
+    const matchesCategory = !categoryFilter || book.category === categoryFilter;
+
+    return matchesSearch && matchesPrice && matchesCondition && matchesCategory;
+  });
 
   const calculateTotalPrice = () => {
     return cart?.items.reduce((total, item) => total + (item.book?.price || 0) * item.quantity, 0) || 0;
@@ -98,98 +118,239 @@ const HomePage = () => {
   };
 
   return (
-    <div className="homepage-container" dir="rtl">
-      <div className="homepage-header-actions">
-        <div className="search-wrapper">
-          <i className="fas fa-search search-icon"></i>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="ابحث بالعنوان، المؤلف، أو التصنيف..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+    <div className="bg-surface text-on-surface font-manrope selection:bg-secondary-container selection:text-on-secondary-container min-h-screen">
+      <NewNavbar />
 
-        <div className="action-buttons">
-            {userRole === "buyer" && (
-            <div className="cart-wrapper">
-                <button onClick={toggleCart} className="cart-toggle-btn">
-                <i className="fas fa-shopping-basket"></i>
-                <span className="cart-count">{cart?.items.length || 0}</span>
-                <span className="cart-text">السلة</span>
-                </button>
-                {cartOpen && (
-                <div className="cart-dropdown">
-                    <h3>سلة التسوق</h3>
-                    {cart && cart.items.length > 0 ? (
-                    <>
-                        <div className="cart-items-list">
-                        {cart.items.map((item) => (
-                            <div key={item.book?._id} className="cart-item-row">
-                                <div className="cart-item-info">
-                                    <span className="item-title">{item.book?.title}</span>
-                                    <span className="item-price">{item.book?.price} ج.م</span>
-                                </div>
-                                <button onClick={() => handleRemoveFromCart(item.book?._id)} className="remove-item-btn">
-                                    <i className="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        ))}
+      {/* Cart Drawer Toggle (If Buyer) */}
+      {userRole === "buyer" && (
+        <div className="fixed bottom-8 right-8 z-50">
+          <button
+            onClick={toggleCart}
+            className="bg-primary text-on-primary p-4 rounded-full shadow-2xl hover:scale-110 transition-transform relative"
+          >
+            <span className="material-symbols-outlined">shopping_cart</span>
+            {cart?.items.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-error text-white text-[10px] rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                {cart.items.length}
+              </span>
+            )}
+          </button>
+          {cartOpen && (
+            <div className="absolute bottom-20 right-0 w-80 bg-surface-container-lowest p-6 rounded-2xl shadow-2xl border border-outline-variant/20">
+              <h3 className="font-notoSerif text-lg mb-4 text-primary">
+                سلة التسوق
+              </h3>
+              {cart && cart.items.length > 0 ? (
+                <>
+                  <div className="max-h-60 overflow-y-auto space-y-4 mb-4 hide-scrollbar">
+                    {cart.items.map((item) => (
+                      <div
+                        key={item.book?._id}
+                        className="flex justify-between items-center gap-4"
+                      >
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-primary line-clamp-1">
+                            {item.book?.title}
+                          </p>
+                          <p className="text-xs text-outline">
+                            {item.book?.price} ج.م
+                          </p>
                         </div>
-                        <div className="cart-footer">
-                            <div className="total-amount">
-                                <span>الإجمالي:</span>
-                                <strong>{calculateTotalPrice()} جنيه</strong>
-                            </div>
-                            <button className="checkout-btn" onClick={handleOrder}>إتمام الطلب</button>
-                        </div>
-                    </>
-                    ) : (
-                    <div className="empty-cart">
-                        <i className="fas fa-shopping-cart"></i>
-                        <p>السلة فارغة حالياً</p>
+                        <button
+                          onClick={() => handleRemoveFromCart(item.book?._id)}
+                          className="text-error hover:scale-110 transition-transform"
+                        >
+                          <span className="material-symbols-outlined text-sm">
+                            delete
+                          </span>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pt-4 border-t border-outline-variant/20">
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="text-sm font-semibold">الإجمالي:</span>
+                      <span className="text-lg font-bold text-primary">
+                        {calculateTotalPrice()} جنيه
+                      </span>
                     </div>
-                    )}
+                    <button
+                      className="w-full bg-primary text-on-primary py-3 rounded-xl font-bold hover:opacity-90 transition-opacity"
+                      onClick={handleOrder}
+                    >
+                      إتمام الطلب
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <span className="material-symbols-outlined text-4xl text-outline-variant mb-2">
+                    shopping_cart_off
+                  </span>
+                  <p className="text-sm text-outline">السلة فارغة حالياً</p>
                 </div>
-                )}
+              )}
             </div>
-            )}
-
-            {userRole === "seller" && (
-            <Link to="/add-book" className="add-book-nav-btn">
-                <i className="fas fa-plus"></i>
-                إضافة كتاب
-            </Link>
-            )}
+          )}
         </div>
-      </div>
+      )}
 
-      <header className="page-intro">
-        <h1>استكشف مجموعتنا</h1>
-        <p>تصفح آلاف الكتب المستعملة بجودة ممتازة</p>
-      </header>
+      <main className="pt-32 pb-20 px-8 max-w-screen-2xl mx-auto flex gap-12">
+        {/* Sidebar Filters */}
+        <aside className="w-64 flex-shrink-0 hidden lg:block">
+          <div className="sticky top-32 space-y-10">
+            <div className="space-y-4">
+              <h3 className="font-notoSerif text-xl font-bold text-primary">Filters</h3>
+              <div className="h-px bg-outline-variant/20"></div>
+            </div>
+            {/* Price Range */}
+            <div className="space-y-4">
+              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Price Range</label>
+              <div className="space-y-2">
+                <input
+                  className="w-full accent-primary h-1.5 bg-surface-container-high rounded-full appearance-none cursor-pointer"
+                  type="range"
+                  min="0"
+                  max="5000"
+                  step="50"
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(parseInt(e.target.value))}
+                />
+                <div className="flex justify-between text-xs font-medium text-on-surface-variant">
+                  <span>0 EGP</span>
+                  <span>{priceRange.toLocaleString()} EGP</span>
+                </div>
+              </div>
+            </div>
+            {/* Condition */}
+            <div className="space-y-4">
+              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Condition</label>
+              <div className="flex flex-col gap-3">
+                {['Like New', 'Good', 'Fair'].map((cond) => (
+                  <label key={cond} className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      className="rounded-sm border-outline-variant text-primary focus:ring-primary h-4 w-4"
+                      type="checkbox"
+                      checked={selectedConditions.includes(cond)}
+                      onChange={() => handleConditionChange(cond)}
+                    />
+                    <span className="text-sm group-hover:text-primary transition-colors">{cond}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            {/* Location */}
+            <div className="space-y-4">
+              <label className="text-sm font-semibold uppercase tracking-widest text-outline">Location</label>
+              <select className="w-full bg-surface-container-low border-none text-sm rounded-lg focus:ring-primary/20 p-3">
+                <option>All Egypt</option>
+                <option>Cairo</option>
+                <option>Giza</option>
+                <option>Alexandria</option>
+              </select>
+            </div>
+          </div>
+        </aside>
 
-      <section className="books-grid-section">
-        {filteredBooks.length > 0 ? (
-          <div className="books-grid">
-            {filteredBooks.map((book) => (
-              <BookCard
-                key={book._id}
-                book={book}
-                onAddToCart={handleAddToCart}
-                showAddToCart={userRole === "buyer"}
-              />
-            ))}
+        {/* Listing Content */}
+        <section className="flex-grow">
+          {/* Header & Sorting */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <h1 className="font-notoSerif text-4xl md:text-5xl font-light text-primary leading-tight">The Library</h1>
+              <p className="text-on-surface-variant font-manrope mt-2">Discover {filteredBooks.length} curated literary gems</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <span className="text-xs uppercase tracking-widest text-outline font-semibold">Sort By:</span>
+              <div className="relative group">
+                <button className="flex items-center gap-2 text-sm font-medium border-b-2 border-transparent hover:border-primary pb-1 transition-all">
+                  Newest Arrivals
+                  <span className="material-symbols-outlined text-sm">keyboard_arrow_down</span>
+                </button>
+              </div>
+            </div>
           </div>
-        ) : (
-          <div className="no-results">
-            <i className="fas fa-search"></i>
-            <h3>لا توجد نتائج لبحثك</h3>
-            <p>جرب كلمات بحث أخرى</p>
-          </div>
-        )}
-      </section>
+
+          {/* Responsive Grid */}
+          {filteredBooks.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16">
+              {filteredBooks.map((book) => (
+                <div key={book._id} className="group cursor-pointer">
+                  <Link to={`/book/${book._id}`}>
+                    <div className="relative aspect-[3/4] overflow-hidden rounded-lg bg-surface-container-low mb-6 transition-transform duration-500 group-hover:-translate-y-2">
+                      <img
+                        className="w-full h-full object-cover"
+                        alt={book.title}
+                        src={book.coverPhoto ? `${IMAGE_BASE_URL}/cover_books/${book.coverPhoto}` : "https://lh3.googleusercontent.com/aida-public/AB6AXuA6ryO6V_waZqPmRMFHIYZ-aYwn7K38PfDWUvMi3WJkLKT9RJWT9qtTpGXFgTuwDw1qJiSLkIBM-_znw5KGnrPeC5-zAQxE30sh2aulpNff7V1eL3KSdRLhgCAqEe45BwGe_mfPN0JJzEzueHy3v6XgEXep104e4A5czb-UmQ8l6OJHRpHd3BIjeXx03duxY0coxTNwLmL2k5DjnxbmRQ91b099CwOLhXsBYNbG8KpgJkmEeWNq1_ZIgWdxdrwSDfoLTrSqSn0IYkBS"}
+                      />
+                      <div className="absolute top-4 left-4">
+                        <span className="bg-secondary-container/90 backdrop-blur-md text-on-secondary-container px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">
+                          {book.condition || 'Good'}
+                        </span>
+                      </div>
+                      <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/5 transition-colors duration-300"></div>
+                    </div>
+                  </Link>
+                  <div className="space-y-2">
+                    <div className="flex justify-between items-start gap-4">
+                      <Link to={`/book/${book._id}`}>
+                        <h2 className="font-notoSerif text-xl text-primary leading-snug group-hover:underline decoration-primary/30 underline-offset-4 line-clamp-1">
+                          {book.title}
+                        </h2>
+                      </Link>
+                      <span className="font-manrope font-bold text-primary whitespace-nowrap">{book.price} EGP</span>
+                    </div>
+                    <p className="text-sm text-on-surface-variant">{book.author}</p>
+                    <div className="flex items-center justify-between pt-2">
+                      <div className="flex items-center gap-2">
+                        <div className="flex text-tertiary-container">
+                          <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="material-symbols-outlined text-xs" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
+                          <span className="material-symbols-outlined text-xs">star</span>
+                        </div>
+                        <span className="text-[10px] uppercase tracking-widest text-outline font-bold">4.8</span>
+                      </div>
+                      {userRole === 'buyer' && (
+                        <button
+                          onClick={() => handleAddToCart(book._id)}
+                          className="bg-primary text-on-primary p-2 rounded-full hover:scale-110 transition-transform shadow-md"
+                        >
+                          <span className="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <span className="material-symbols-outlined text-6xl text-outline-variant mb-4">search_off</span>
+              <h3 className="text-xl font-notoSerif text-primary mb-2">No books found</h3>
+              <p className="text-on-surface-variant">Try adjusting your filters or search terms.</p>
+            </div>
+          )}
+
+          {/* Pagination */}
+          <nav className="mt-24 flex items-center justify-center gap-4">
+            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+            <div className="flex gap-2">
+              <button className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-on-primary font-bold shadow-md">1</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">2</button>
+              <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-high transition-colors">3</button>
+            </div>
+            <button className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-on-surface hover:bg-primary hover:text-on-primary transition-all">
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
+          </nav>
+        </section>
+      </main>
+
+      <NewFooter />
     </div>
   );
 };
