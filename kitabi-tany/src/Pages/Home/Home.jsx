@@ -139,7 +139,7 @@ const Home = () => {
             <div className="md:col-span-2 relative rounded-2xl overflow-hidden group">
               <img
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                alt="ethereal photo of an open book with pages fluttering in the wind against a soft sunset background"
+                alt="ethereal open book with pages fluttering in the wind against a soft sunset background"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd__w3-myymwbVhHChBJ0BfYHlsOlddvx1FM3z_eOzJdsKqVzoFyHuKFJyYPGXCAao0sGpEcG-pAEVTx43BXBLcL_jBHb1CkOFak1w3f-XCmEt4dkZq-1ktA-CzX-uRMZaSARFks8iMsXMrrQeXl-touACU0TjtgWLCKoKNwV2IucUlZwbVY6FSukJAPTh74An6YSWsFysZm6EDnQ5g2cYycXL_o6YhIhLd_5EjUX7XxNgaiLk36PEX2Qztu9HO7CJP95_trAbHKgx"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>

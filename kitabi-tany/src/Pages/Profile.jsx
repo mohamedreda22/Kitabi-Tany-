@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import Swal from 'sweetalert2';
 import { getUserById, updateUser, deleteUser, logout } from '../services/userService';
 import { IMAGE_BASE_URL } from '../services/axiosInstance';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -18,22 +18,7 @@ const Profile = () => {
     const userId = Cookies.get('userId');
     const token = Cookies.get('token');
 
-    useEffect(() => {
-        if (!userId || !token) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'غير مصرح لك بالدخول',
-                text: 'الرجاء تسجيل الدخول للوصول الى هذه الصفحة',
-                confirmButtonColor: '#00333c',
-            }).then(() => {
-                navigate('/login');
-            });
-        } else {
-            fetchUserData();
-        }
-    }, [navigate, userId, token]);
-
-    const fetchUserData = async () => {
+    const fetchUserData = useCallback(async () => {
         try {
             const data = await getUserById(userId);
             setFormData({
@@ -52,7 +37,22 @@ const Profile = () => {
                 confirmButtonColor: '#ba1a1a',
             });
         }
-    };
+    }, [userId]);
+
+    useEffect(() => {
+        if (!userId || !token) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'غير مصرح لك بالدخول',
+                text: 'الرجاء تسجيل الدخول للوصول الى هذه الصفحة',
+                confirmButtonColor: '#00333c',
+            }).then(() => {
+                navigate('/login');
+            });
+        } else {
+            fetchUserData();
+        }
+    }, [navigate, userId, token, fetchUserData]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
