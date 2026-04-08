@@ -47,7 +47,7 @@ const uploadProfile = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
             console.log('Setting file destination');
-            cb(null, 'Uploads/Profile_pictures');
+            cb(null, path.join(__dirname, '../Uploads/Profile_pictures'));
         },
         filename: (req, file, cb) => {
             console.log('Setting file name');
