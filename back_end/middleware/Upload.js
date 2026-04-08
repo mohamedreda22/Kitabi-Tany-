@@ -1,21 +1,29 @@
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
+// Helper to ensure directory exists
+const ensureDir = (dirPath) => {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+    }
+    return dirPath;
+};
 
 // Storage configuration for book covers
 const storageBook = multer.diskStorage({
     destination: (req, file, cb) => {
-        // Destination folder for the uploaded book cover images
-        cb(null, path.join(__dirname, '../Uploads/cover_books'));
+        try {
+            const dest = ensureDir(path.resolve(__dirname, '../Uploads/cover_books'));
+            cb(null, dest);
+        } catch (error) {
+            cb(error);
+        }
     },
     filename: (req, file, cb) => {
-        // Set the file name to be the current timestamp + the original file extension
         cb(null, Date.now() + path.extname(file.originalname));
     }
 });
-
-
-
 
 // File filter to allow only image files
 const fileFilter = (req, file, cb) => {
@@ -37,42 +45,20 @@ const uploadBook = multer({
     limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5 MB
 });
 
-/* const uploadProfile = multer({
-    storage: storageProfile,
-    fileFilter,
-    limits: { fileSize: 5 * 1024 * 1024 } // Limit file size to 5 MB
-}); */
-// const uploadProfile = multer({ storage: storageProfile}).single('profilePicture');
 const uploadProfile = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            console.log('Setting file destination');
-            cb(null, path.join(__dirname, '../Uploads/Profile_pictures'));
+            try {
+                const dest = ensureDir(path.resolve(__dirname, '../Uploads/Profile_pictures'));
+                cb(null, dest);
+            } catch (error) {
+                cb(error);
+            }
         },
         filename: (req, file, cb) => {
-            console.log('Setting file name');
             cb(null, Date.now() + '-' + file.originalname);
         },
     }),
 }).single('profilePicture');
-
-
-/* const uploadProfile = multer({
-    storage: multer.diskStorage({
-        destination: (req, file, cb) => {
-            cb(null, 'Uploads/Profile_pictures');
-        },
-        filename: (req, file, cb) => {
-            cb(null, Date.now() + '-' + file.originalname);
-        },
-    }),
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-            cb(null, true);
-        } else {
-            cb(new Error('Only .jpeg and .png formats are allowed'));
-        }
-    },
-}).single('profilePicture'); */
 
 module.exports = { uploadBook, uploadProfile };
